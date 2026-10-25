@@ -1,7 +1,7 @@
 public class Game {
 
     GameUI ui;
-    Monster monster;
+    Monster monster; // operates on a thread system
     Location[] locations;
     // audio https://www.youtube.com/watch?v=tmlZeYnfw7g
 
@@ -17,5 +17,7 @@ public class Game {
         // show ui
         // set main screen
         ui.setVisible(true);
+
+
     }
 }
