@@ -7,19 +7,16 @@ public class Game {
     Location working_location;
     // audio https://www.youtube.com/watch?v=tmlZeYnfw7g
 
-
-
-    final String HEAD_FILE = "json.json";
-
     public Game() {
-        locations = Location.loadLocations(HEAD_FILE);
+        locations = Location.loadLocations();
 
-        ui = new GameUI(this::start);
-        soundEffectThread = new Thread(() -> {});
+//        ui = new GameUI(this::start);
+//        soundEffectThread = new Thread(() -> {});
     }
 
     public void boot() {
-        ui.setVisible(true);
+//        ui.setVisible(true);
+        System.out.println("game booted");
     }
 
     // start game

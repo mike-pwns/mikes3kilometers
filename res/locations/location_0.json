@@ -1,0 +1,38 @@
+{
+  "locationIndex":  0,
+  "angles": [
+    {
+      "imgFilepath": "res/images/location_0/angle0.jpg",
+      "clickables": [
+        {
+          "clickableType": "turn_right",
+          "symbol": ">",
+          "x": 0.85, "y": 0.40, "w": 0.10, "h": 0.20,
+          "targetAngle": 1
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.45, "y": 0.45, "w": 0.08, "h": 0.12,
+          "dialogue": "never touch a blacks mans radio!!"
+        }
+      ],
+      "monsterSpawnCoords": [
+        [25, 32],
+        [100, 100]
+      ]
+    },
+    {
+      "imgFilepath": "res/images/location_0/angle1.jpg",
+      "clickables": [
+        {
+          "clickableType": "turn_left",
+          "symbol": "<",
+          "x": 0.05, "y": 0.40, "w": 0.10, "h": 0.20,
+          "targetAngle": 0
+        }
+      ],
+      "monsterSpawnCoords": []
+    }
+  ]
+}

@@ -102,10 +102,10 @@ public class GameUI extends JFrame {
     public void renderAngle(Location location, int angle_index) {
         this.getContentPane().removeAll();
 
-        location = new Location();
-        BackgroundPanel anglePanel = new BackgroundPanel(location.angles[angle_index]);
+//        location = new Location();
+//        BackgroundPanel anglePanel = new BackgroundPanel(location.angles[angle_index]);
 
-        this.setContentPane(anglePanel);
+//        this.setContentPane(anglePanel);
         this.revalidate();
         this.repaint();
     }
@@ -152,6 +152,28 @@ class BackgroundPanel extends JPanel {
     }
 }
 
+// just a thing that user can click
+/*
+* [!] to inspect
+* [v] to go
+* [<] [>] to change angles
+*
+* */
 class Clickable {
+    String clickableType;   // "turn_left", "turn_right", "dialog", "go"
+    String symbol;
+    float x, y, w, h;
+    Integer targetAngle;    // Integer so "missing" differs from 0
+    String targetLocation;
+    String dialogue;
 
+    @Override
+    public String toString() {
+        return "{" + clickableType + " '" + symbol + "' x=" + x + " y=" + y
+                + " w=" + w + " h=" + h
+                + (targetAngle != null ? " targetAngle=" + targetAngle : "")
+                + (targetLocation != null ? " targetLocation=" + targetLocation : "")
+                + (dialogue != null ? " dialogue=\"" + dialogue + "\"" : "")
+                + "}";
+    }
 }
