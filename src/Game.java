@@ -10,12 +10,12 @@ public class Game {
     public Game() {
         locations = Location.loadLocations();
 
-//        ui = new GameUI(this::start);
+        ui = new GameUI(this::start);
 //        soundEffectThread = new Thread(() -> {});
     }
 
     public void boot() {
-//        ui.setVisible(true);
+        ui.setVisible(true);
         System.out.println("game booted");
     }
 
