@@ -1,6 +1,6 @@
 public class Location {
 
-    String[] angles; // list of all pics
+    String[] angles = {"res/images/bg.jpg"}; // list of all pics
     int[][] monsterSpawnCoords; // places where the dude can appear in the img
 
     public static Location[] loadLocations(String keyfile) {
