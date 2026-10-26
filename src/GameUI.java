@@ -149,7 +149,7 @@ public class GameUI extends JFrame {
         } catch (Exception e) {
             System.out.println(e);
         }
-        return new Font("arial", Font.BOLD, 12); //
+        return new Font("arial", Font.BOLD, 12); // by def
     }
 
     public void setBackgroundImage(String URI) {
