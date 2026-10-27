@@ -7,7 +7,7 @@ public class Angle {
 
     String imgFilepath; // got its background
     Clickable[] clickables; // and da clickables
-    int[][] monsterSpawnCoords; // cant forget about the monster spawn coords (IF he or it spawns O.O)
+    int[][] monsterSpawnCoords; // cant forget about the monster spawn coords (IF he or it spawns OvO)
 
     // -- METHODS
 

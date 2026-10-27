@@ -23,7 +23,7 @@ public class Game {
     public void start() {
 
         // set ui
-        ui.renderAngle(working_location, 0);
+//        ui.renderAngle(working_location, 0);
 
         // set main screen
 //        soundEffectThread.start();
