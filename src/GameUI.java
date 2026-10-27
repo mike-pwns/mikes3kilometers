@@ -20,13 +20,15 @@ public class GameUI extends JFrame {
     // -- FIELDS
 
     public static final Font pixelFont = loadPixelFont();
-
     private boolean fullscreen = false;
     private Rectangle previousWindowBounds;
+    private Game gameState;
 
     // -- CONSTRUCTOR
 
-    public GameUI(Runnable startGameMethod) {
+    public GameUI(Game gameState) {
+
+        this.gameState = gameState;
 
         // just default to this size cuz like every game does that
         setSize(1280, 720);
@@ -38,7 +40,7 @@ public class GameUI extends JFrame {
         setIconImage(new ImageIcon(ICON_FILEPATH).getImage());
 
         // draw the main menu
-        setupMainMenu(startGameMethod);
+        setupMainMenu();
 
         // this is just a listener for whenever the window is resized we gotta resize the text too
         addComponentListener(new ComponentAdapter() {
@@ -64,7 +66,7 @@ public class GameUI extends JFrame {
 
     // super simple.. main menu is a unique screen, so like we build it from scratch.
     // whereas the game screens
-    private void setupMainMenu(Runnable startGameMethod) {
+    private void setupMainMenu() {
 
         // Background and menu layout
         BackgroundPanel background = new BackgroundPanel(
@@ -109,7 +111,7 @@ public class GameUI extends JFrame {
         startButton.setBorderPainted(false);
         startButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         startButton.putClientProperty("fontRatio", 0.05f);
-        startButton.addActionListener(e -> startGameMethod.run());
+        startButton.addActionListener(e -> gameState.start());
 
         // so much work for just a button!!!!
         menuPanel.add(startButton);
@@ -121,7 +123,7 @@ public class GameUI extends JFrame {
                 0.275f, 0.27f, 0.08f, 0.03f
         );
         Clickable tipsBtn = new Clickable(
-                "other", "tips", 0.275f, 0.37f, 0.08f, 0.03f
+                "info", "info", 0.275f, 0.37f, 0.08f, 0.03f
 
         );
 
@@ -141,15 +143,15 @@ public class GameUI extends JFrame {
     // this method just sets the actual screen.
     // combines a BackgroundPanel (an image for a background) with
     // a list of Clickables (stuff user can click on the painted backdrop) TODO change to JPanel?
-    public void setGameScreen(BackgroundPanel background, List<Clickable> clickables) {
+    public void setGameScreen(BackgroundPanel background_layer, List<Clickable> clickables) {
 
         // were essentially building a new pane (this is like a container of panes/layers of the screen: background + clickable pane)
         // note if u never saw this before, i didnt either, this container obj is just like dexters glass blood thing. JLayeredPane is the container, each glass pane is like JPanel. simple yeah?
-        JLayeredPane layers = new JLayeredPane();
-        layers.setLayout(null);
+        JLayeredPane screenPane = new JLayeredPane();
+        screenPane.setLayout(null);
 
         // def layer is like the bottom layer, so we just set the background panel to that
-        layers.add(background, JLayeredPane.DEFAULT_LAYER);
+        screenPane.add(background_layer, JLayeredPane.DEFAULT_LAYER);
 
         // make a new TRANSPARENT jpanel for all the clickables to be drawn on it
         JPanel clickable_layer = new JPanel(null);
@@ -162,78 +164,82 @@ public class GameUI extends JFrame {
         }
 
         // add clickable layer to the top
-        layers.add(clickable_layer, JLayeredPane.PALETTE_LAYER);
+        screenPane.add(clickable_layer, JLayeredPane.PALETTE_LAYER);
 
-        // Resize both layers and reposition clickables.
-        Runnable layoutScreen = () -> {
-            int width = layers.getWidth();
-            int height = layers.getHeight();
+        // just the runnable for whenever we wanna resize crap
+        Runnable screenResizeRunnable = () -> {
 
-            background.setBounds(0, 0, width, height);
+            // pull the window width and height
+            int width = screenPane.getWidth();
+            int height = screenPane.getHeight();
+
+            // set each layer to the full bounds
+            background_layer.setBounds(0, 0, width, height);
             clickable_layer.setBounds(0, 0, width, height);
 
+            // def diagonal (niche function btw, learned abt this just now)
             double diagonal = Math.hypot(width, height);
 
+            // Go through each component (cuz it could be button or text, we just need the super of both of those)
             for (Component component : clickable_layer.getComponents()) {
-                JButton button = (JButton) component;
 
-                Clickable clickable = (Clickable)
-                        button.getClientProperty("clickable");
-
-                button.setBounds(
-                        (int) (width * clickable.x),
-                        (int) (height * clickable.y),
-                        (int) (diagonal * clickable.w),
-                        (int) (diagonal * clickable.h)
-                );
+                if (component instanceof JButton) {
+                    // resize the button to match the scaled components of the clickable its assigned
+                    JButton button = (JButton) component;
+                    Clickable clickable = (Clickable) button.getClientProperty("clickable");
+                    button.setBounds((int) (width * clickable.x), (int) (height * clickable.y), (int) (diagonal * clickable.w), (int) (diagonal * clickable.h));
+                }
             }
 
-            rescaleFonts(layers);
+            // rescale fonts... as per usual..
+            rescaleFonts(screenPane);
         };
 
-        layers.addComponentListener(new ComponentAdapter() {
+        // just run the runnable whenever the window is resized
+        screenPane.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                layoutScreen.run();
+                screenResizeRunnable.run();
             }
         });
 
-        setContentPane(layers);
+        // set the window (this) pane to what we just built
+        setContentPane(screenPane);
 
+        // once all is rendered, make sure the scaling is applied (+ painting and validating, cuz gotta do that)
         SwingUtilities.invokeLater(() -> {
-            layoutScreen.run();
-            layers.revalidate();
-            layers.repaint();
+            screenResizeRunnable.run();
+            screenPane.revalidate();
+            screenPane.repaint();
         });
     }
 
 
-
-    // -- CLICKABLE ACTIONS
-
+    // this is the infamous clickable
+    // just takes the clickable that called the handle, and performs the necessary- whatever i want. i am supreme overlord here
     private void handleClickable(Clickable clickable) {
         switch (clickable.clickableType) {
-            case "fullscreen" -> toggleFullscreen();
-
-            case "turn_left" -> System.out.println("Turn left");
-
-            case "turn_right" -> System.out.println("Turn right");
-
-            case "go" -> System.out.println(
-                    "Go to " + clickable.targetLocation
-            );
-
-            case "dialog" -> System.out.println(clickable.dialogue);
-
-            default -> System.out.println(
-                    "Unknown clickable: "
-                            + clickable.clickableType
-            );
+            case "fullscreen":
+                toggleFullscreen();
+                break;
+            case "turn_left":
+                System.out.println("Turn left");
+                break;
+            case "turn_right":
+                System.out.println("Turn right");
+                break;
+            case "go":
+                System.out.println("Go to " + clickable.targetLocation);
+                break;
+            case "dialog":
+                System.out.println(clickable.dialogue);
+            default:
+                System.out.println("ClIckaABle Iz unRECOgnIzed!!!!!!! Vau!");
+                break; // yea we dont need break but whatevs
         }
     }
 
-    // -- FONT SCALING
-
+    // scale font. not gonna try to explain this. this is claudes contribution of the proj
     private void rescaleFonts(Container container) {
         int height = getContentPane().getHeight();
 
@@ -262,35 +268,48 @@ public class GameUI extends JFrame {
         container.repaint();
     }
 
-    // -- FULLSCREEN
-
+    // super simple fullscreen thing
     private void toggleFullscreen() {
-        GraphicsDevice device = GraphicsEnvironment
-                .getLocalGraphicsEnvironment()
-                .getDefaultScreenDevice();
+        GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(); // pull the screen itself (with its info and all)
 
+        // setting fullscreen
         if (!fullscreen) {
+
+            // set the prev bounds (cuz were nice programmers and want going out of fullscreen to result in the same bounds)
             previousWindowBounds = getBounds();
 
-            dispose();
-            setUndecorated(true);
-            device.setFullScreenWindow(this);
+            dispose(); // this gets rid of the screen itself, not all the data
+            setUndecorated(true); // this just removes the top bar with all the -[]x thing
+            setVisible(true); // idk why we needed this, but thank you claude for the debug tip :/
+            device.setFullScreenWindow(this); // then it redraws it in fullscreen
 
-            fullscreen = true;
-        } else {
-            device.setFullScreenWindow(null);
-
-            dispose();
-            setUndecorated(false);
-
-            if (previousWindowBounds != null) {
-                setBounds(previousWindowBounds);
-            }
-
-            fullscreen = false;
-            setVisible(true);
         }
 
+        // going out of fullscreen
+        else {
+
+            // release screen/monitor from fullscreen
+            device.setFullScreenWindow(null);
+
+            // same jist, get rid of the actual rendered window
+            dispose();
+
+            // add the -[]x "decoration" (id call it a heading?)
+            setUndecorated(false);
+
+            // apply the bounds saved before
+            setBounds(previousWindowBounds);
+
+            // just set it visible (undoes dispose pretty much)
+            setVisible(true);
+
+
+        }
+
+        // change flag cuz duh doy
+        fullscreen = !fullscreen;
+
+        // same idea as before: just keep all the ops calm until we actually render ts
         SwingUtilities.invokeLater(() -> {
             getContentPane().revalidate();
             getContentPane().repaint();
@@ -298,23 +317,20 @@ public class GameUI extends JFrame {
         });
     }
 
-    // -- FONT LOADING
-
+    // font loader func - just reads the ttf file and sets the custom font to the var
     private static Font loadPixelFont() {
         try {
-            Font font = Font.createFont(
-                    Font.TRUETYPE_FONT,
-                    new File(FONT_PIXELTA)
-            );
+            // read the .ttf
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new File(FONT_PIXELTA));
 
-            GraphicsEnvironment
-                    .getLocalGraphicsEnvironment()
-                    .registerFont(font);
+            // register the font with the graphix system, just meeans its chill to be used like any normal font.
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
 
+            // return it to be saved in the static var for everyone to use
             return font;
-        } catch (Exception e) {
-            System.out.println(e);
-            return new Font("Arial", Font.BOLD, 12);
+        }
+        catch (Exception e) {
+            return new Font("Arial", Font.BOLD, 12); // in case sum breaks we return this
         }
     }
 

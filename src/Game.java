@@ -10,7 +10,7 @@ public class Game {
     public Game() {
         locations = Location.loadLocations();
 
-        ui = new GameUI(this::start);
+        ui = new GameUI(this);
 //        soundEffectThread = new Thread(() -> {});
     }
 
