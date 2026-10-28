@@ -47,6 +47,8 @@ public class GameUI extends JFrame {
         setSize(1280, 720);
         setLocationRelativeTo(null); // centers it on the screen
 
+        setBackground(Color.BLACK); // This is HUGE. thank me for this.
+
         // extra nice stuff
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("mikes3kilometers");
