@@ -56,6 +56,10 @@ public class Clickable {
         return button;
     }
 
+    public Integer getTargetAngle() {
+        return targetAngle;
+    }
+
     public void setDialogue(String text) {
         dialogue = text;
     }

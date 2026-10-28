@@ -32,19 +32,25 @@ public class Game {
     }
 
     // start game
+    // start game
     public void start() {
-
-        // start all the threads
-        // monster thread
-        //
         workingLocation = locations[0];
-        workingAngle = workingLocation.getAngle(0);
+        goToAngle(0);
+    }
 
+    // switches to an angle of the current location and redraws the screen
+    public void goToAngle(int angleIndex) {
+        if (angleIndex < 0 || angleIndex >= workingLocation.getAngles().length) {
+            System.out.println("no angle " + angleIndex + " in location " + workingLocation.locationIndex);
+            return;
+        }
 
-        ui.setGameScreen(new GameUI.BackgroundPanel(workingAngle.getImgFilepath()), workingAngle.getClickables());
+        workingAngle = workingLocation.getAngle(angleIndex);
 
-
-
+        ui.setGameScreen(
+                new GameUI.BackgroundPanel(workingAngle.getImgFilepath()),
+                workingAngle.getClickables(),
+                Angle.buildAngleString(workingLocation, workingAngle, workingLocation.getAngles()));
     }
 
     public void toggleGameRunning() {

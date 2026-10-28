@@ -21,7 +21,11 @@ public class GameUI extends JFrame {
                     "\n\ngame is about my evening runs b4 sleep.. uh yeah that and imagination ig. inspired by ROAM120.exe" +
                     "\n\nthe photos are real and NOT edited (aside from some minor censoring in the colour #222222) - theyre taken with some unique settings, ill put the app I used in the github readme under resources" +
                     "\n\nokay.. and... what else? right!\ndear player, there are 2 easter eggs \n(its pretty obv if you find one)\nenjoy : )\n\n[CLICK TO CLOSE]";
-
+    private static final String TIPS_DIALOGUE_TEXT =
+            "take your time to explore the areas, im too lazy to make you able to go back and all that. you may need to restart the game to go through the different branches." +
+                    "\n\nV -> GO TO" +
+                    "\n* -> INSPECT" +
+                    "\n < > ^ -> CHANGE PERSPECTIVE/ANGLE" + "\n\n[CLICK TO CLOSE]";
 
     // -- FIELDS
 
@@ -30,6 +34,7 @@ public class GameUI extends JFrame {
     private Rectangle previousWindowBounds;
     private final Game gameState;
     private JPanel activeDialoguePanel;
+    private Timer dialogueTimer;
 
     // -- CONSTRUCTOR
 
@@ -119,105 +124,98 @@ public class GameUI extends JFrame {
         startButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         startButton.putClientProperty("fontRatio", 0.05f);
         startButton.addActionListener(e -> gameState.start());
-
-        startButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                System.out.println("entered start: " + startButton.getBounds());
-            }
-        });
+// debuggin for the pointer thingy
+//        startButton.addMouseListener(new java.awt.event.MouseAdapter() {
+//            @Override
+//            public void mouseEntered(java.awt.event.MouseEvent e) {
+//                System.out.println("entered start: " + startButton.getBounds());
+//            }
+//        });
 
         // so much work for just a button!!!!
         menuPanel.add(startButton);
         rightPanel.add(menuPanel);
 
         // main menu clickables (for the "game" its all read from the json)
-        Clickable fullscreenBtn = new Clickable("fullscreen", "fullscreen", 0.275f, 0.27f, 0.08f, 0.03f);
-        Clickable infoBtn = new Clickable("dialog", "info", 0.275f, 0.37f, 0.08f, 0.03f);
+        Clickable infoBtn = new Clickable("dialog", "info", 0.275f, 0.27f, 0.08f, 0.03f);
         infoBtn.setDialogue(INFO_DIALOGUE_TEXT); // just its a longer dialogue and putting it all here is whew! a lot!
-
-        Clickable exitBtn = new Clickable("exit", "exit", 0.278f, 0.47f, 0.08f, 0.03f);
+        Clickable tipsBtn = new Clickable("dialog", "tips", 0.275f, 0.37f, 0.08f, 0.03f);
+        tipsBtn.setDialogue(TIPS_DIALOGUE_TEXT); // just its a longer dialogue and putting it all here is whew! a lot!
 
         List<Clickable> clickables = new ArrayList<>();
-        clickables.add(fullscreenBtn);
         clickables.add(infoBtn);
-        clickables.add(exitBtn);
+        clickables.add(tipsBtn);
 
         Clickable[] clickableArray = clickables.toArray(new Clickable[0]);
         setGameScreen(background, clickableArray);
     }
 
 
-    // this method just sets the actual screen.
-// combines a BackgroundPanel (an image for a background) with
-// a list of Clickables (stuff user can click on the painted backdrop) TODO change to JPanel?
+
+    // main menu and anything else without an angle label: passes null, so no label is drawn
     public void setGameScreen(BackgroundPanel background_layer, Clickable[] clickables) {
+        setGameScreen(background_layer, clickables, null);
+    }
 
+    // game screens: angleText is drawn top left in white. pass null to skip it
+    public void setGameScreen(BackgroundPanel background_layer, Clickable[] clickables, String angleText) {
 
-        // were essentially building a new pane (this is like a container of panes/layers of the screen: background + clickable pane)
-        // note if u never saw this before, i didnt either, this container obj is just like dexters glass blood thing. JLayeredPane is the container, each glass pane is like JPanel. simple yeah?
         JLayeredPane panes = new JLayeredPane();
         panes.setLayout(null);
 
-        // def layer is like the bottom layer, so we just set the background panel to that
         panes.add(background_layer, JLayeredPane.DEFAULT_LAYER);
 
-        // make a new TRANSPARENT jpanel for all the clickables to be drawn on it
         JPanel clickable_layer = new JPanel(null);
         clickable_layer.setOpaque(false);
 
-        // clickables part 1: adding all the clickables to the list
-
+        // corner buttons on every screen, then whatever clickables were passed in
         List<Clickable> onScreenClickables = new ArrayList<>();
-
-        // top right corner buttons, on every screen: fullscreen ("[]") and exit ("X").
-        // these are present on every screen, so we can just add em once here
         onScreenClickables.add(new Clickable("fullscreen", "[ ]", 0.94f, 0.02f, 0.02f, 0.02f));
         onScreenClickables.add(new Clickable("exit", "X", 0.97f, 0.02f, 0.02f, 0.02f));
-
-        // add everything in the passed clickables array
         onScreenClickables.addAll(Arrays.asList(clickables));
 
-        // clickables part 2: go thru each clickable and add a button version of that to the layer
-
         for (Clickable clickable : onScreenClickables) {
-            JButton button = clickable.createButton(this::handleClickable); // fancy c++ syntax just means we pass the handler method from THIS instance into whatever may call it in that method (the scope of THIS obj)
+            JButton button = clickable.createButton(this::handleClickable);
             clickable_layer.add(button);
         }
-
-        // add clickable layer to the top
         panes.add(clickable_layer, JLayeredPane.PALETTE_LAYER);
 
-        // just the runnable for whenever we wanna resize crap
+        // angle label, added after the buttons layer so it sits on top of the background
+        JLabel angleLabel = null;
+        if (angleText != null) {
+            angleLabel = new JLabel(angleText);
+            angleLabel.setForeground(Color.WHITE);
+            angleLabel.putClientProperty("fontRatio", 0.03f); // rescaleFonts handles its size
+            panes.add(angleLabel, JLayeredPane.PALETTE_LAYER);
+        }
+        final JLabel label = angleLabel; // lambda below needs a final reference
+
         Runnable screenResizeRunnable = () -> {
 
-            // pull the window width and height
             int width = panes.getWidth();
             int height = panes.getHeight();
 
-            // set each layer to the full bounds
             background_layer.setBounds(0, 0, width, height);
             clickable_layer.setBounds(0, 0, width, height);
 
-            // def diagonal (niche function btw, learned abt this just now)
             double diagonal = Math.hypot(width, height);
 
-            // Go through each component (cuz it could be button or text, we just need the super of both of those)
             for (Component component : clickable_layer.getComponents()) {
-
                 if (component instanceof JButton) {
-                    // resize the button to match the scaled components of the clickable its assigned
                     JButton button = (JButton) component;
                     Clickable clickable = (Clickable) button.getClientProperty("clickable");
                     button.setBounds((int) (width * clickable.getX()), (int) (height * clickable.getY()), (int) (diagonal * clickable.getW()), (int) (diagonal * clickable.getH()));
                 }
             }
 
-            // rescale fonts... as per usual..
+            // top left, 1% in from the corner. only JButtons get positioned above, so the label needs its own line
+            if (label != null) {
+                label.setBounds((int) (width * 0.01f), (int) (height * 0.01f), width / 2, (int) (height * 0.05f));
+            }
+
             rescaleFonts(panes);
         };
 
-        // just run the runnable whenever the window is resized
         panes.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -225,10 +223,8 @@ public class GameUI extends JFrame {
             }
         });
 
-        // set the window (this) pane to what we just built
         setContentPane(panes);
 
-        // once all is rendered, make sure the scaling is applied (+ painting and validating, cuz gotta do that)
         SwingUtilities.invokeLater(() -> {
             screenResizeRunnable.run();
             panes.revalidate();
@@ -251,18 +247,15 @@ public class GameUI extends JFrame {
                 System.exit(0);
 
                 // others
-            case "turn_left":
-                System.out.println("Turn left");
-                break;
-            case "turn_right":
-                System.out.println("Turn right");
+            case "turn":
+                gameState.goToAngle(clickable.getTargetAngle());
                 break;
             case "go":
                 System.out.println("Go to " + clickable.getTargetLocation());
                 break;
             case "dialog":
                 showDialogue(clickable);
-                System.out.println("dialogue -> " + clickable.getDialogue());
+//                System.out.println("dialogue -> " + clickable.getDialogue());
                 break;
             default:
                 System.out.println("ClIckaABle Iz unRECOgnIzed!!!!!!! Vau!");
@@ -427,21 +420,48 @@ public class GameUI extends JFrame {
         dialoguePanel.setBounds(panelX, panelY, panelWidth, panelHeight);
         dialoguePanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // stage 4: dismissing the dialogue, by clicking on it
+        // stage 4: dismissing the dialogue, by clicking on it or timer
         dialoguePanel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (dialogueTimer != null) {
+                    dialogueTimer.stop();
+                    dialogueTimer = null;
+                }
                 panes.remove(dialoguePanel);
                 activeDialoguePanel = null;
                 panes.repaint();
             }
         });
 
-        // stage 5: put it on screen. no timer, so it stays until clicked
+        // stays up for the info text (it's the long one), otherwise it fades based on length
+        int length = clickable.getDialogue().length(); // just num chars
+        int duration; // in ms
+
+        if (clickable.getDialogue().equals(INFO_DIALOGUE_TEXT) || clickable.getDialogue().equals(TIPS_DIALOGUE_TEXT)) {
+            duration = Integer.MAX_VALUE; // yeah so.. just click it
+        } else if (length <= 20) {
+            duration = 1000;
+        } else if (length <= 50) {
+            duration = 1500;
+        } else {
+            duration = 3000;
+        }
+
+        dialogueTimer = new javax.swing.Timer(duration, e -> {
+            panes.remove(dialoguePanel);
+            activeDialoguePanel = null;
+            dialogueTimer = null;
+            panes.repaint();
+        });
+        dialogueTimer.setRepeats(false);
+
+        // stage 5: put it on screen, then start the auto dismisser timer
         activeDialoguePanel = dialoguePanel;
         panes.add(dialoguePanel, JLayeredPane.MODAL_LAYER);
         panes.revalidate();
         panes.repaint();
+        dialogueTimer.start();
     }
 
 

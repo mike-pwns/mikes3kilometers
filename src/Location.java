@@ -72,6 +72,10 @@ public class Location {
         return angles;
     }
 
+    public int getLocationIndex() {
+        return locationIndex;
+    }
+
     public Angle getAngle(int angleIndex) {
         return angles[angleIndex];
     }
