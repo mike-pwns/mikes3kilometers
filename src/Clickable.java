@@ -23,18 +23,11 @@ public class Clickable {
 
     // -- CONSTRUCTOR
 
-    public Clickable(
-            String clickableType,
-            String symbol,
-            float x, float y,
-            float w, float h) {
-
+    public Clickable(String clickableType, String symbol, float x, float y, float w, float h) {
         this.clickableType = clickableType;
         this.symbol = symbol;
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
+        this.x = x; this.y = y;
+        this.w = w; this.h = h;
     }
 
     // gotta pass
@@ -45,7 +38,7 @@ public class Clickable {
         button.putClientProperty("clickable", this);
         button.putClientProperty("fontRatio", fontRatio);
 
-        button.setFont(GameUI.pixelFont.deriveFont(20f));
+        button.setFont(GameUI.pixelFont.deriveFont(GameUI.DEFAULT_DERIVED_FONT_SIZE));
         button.setBackground(Color.WHITE);
         button.setForeground(Color.BLACK);
         button.setBorder(new LineBorder(Color.BLACK, 2));
@@ -59,7 +52,45 @@ public class Clickable {
         return button;
     }
 
+    public void setDialogue(String text) {
+        dialogue = text;
+    }
 
+    public String getClickableType() {
+        return clickableType;
+    }
+
+    public String getTargetLocation() {
+        return targetLocation;
+    }
+
+    public String getDialogue() {
+        return dialogue;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getW() {
+        return w;
+    }
+
+    public float getH() {
+        return h;
+    }
+
+    public float getFontRatio() {
+        return fontRatio;
+    }
 
     @Override
     public String toString() {

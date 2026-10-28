@@ -22,20 +22,13 @@ public class Game {
     // start game
     public void start() {
 
-        // set ui
-//        ui.renderAngle(working_location, 0);
+        // start all the threads
 
-        // set main screen
-//        soundEffectThread.start();
-//        working_location = locations[0];
+        //
 
     }
 
-    public void pause() {
+    public void toggleGameRunning() {
         // pauses all threads
-    }
-
-    private void loadWorkingLocation() {
-
     }
 }

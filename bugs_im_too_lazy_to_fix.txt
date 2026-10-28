@@ -1,0 +1,9 @@
+welcome! So.. this is supposed to be like a 3 day project yeah? You're aware of this fact? good
+Being a 3 day proj and all, i want a working version yknow?
+One i can share with goons and they can say "wow this is.. something" in a pretend-impressed voice
+
+alr anyways heres the list for you to exploit if your gonna try to pwn mike-pwns' haloween game:
+- dialogue does not resize properly. (skipped debuggin this cuz like u have 1-3s to resize it, and whos racing to resize the window when theyre reading dialogue?)
+  --> you could get this bug by opening the info dialogue, then fullscreening.
+- in main menu, the cursor for [START] doesnt change.. it did before, then it stopped working
+- when info pressed, clickable unrecognized err msg shows up even though i put break there! probably some extra inside call causes this
