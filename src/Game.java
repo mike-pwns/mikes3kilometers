@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class Game {
 
     GameUI ui;
@@ -8,6 +6,8 @@ public class Game {
     Location[] locations;
     Location workingLocation;
     Angle workingAngle;
+    boolean muted = false;
+    boolean inGame = false; // false while on the main menu
     // audio https://www.youtube.com/watch?v=tmlZeYnfw7g
 
     public Game() {
@@ -20,7 +20,6 @@ public class Game {
             System.out.println("loc 0 is null dude!");
         }
 
-
         ui = new GameUI(this);
 //        soundEffectThread = new Thread(() -> {});
     }
@@ -32,18 +31,14 @@ public class Game {
     }
 
     // start game
-    // start game
     public void start() {
+        inGame = true;
         workingLocation = locations[0];
         goToAngle(0);
     }
 
     // switches to an angle of the current location and redraws the screen
     public void goToAngle(int angleIndex) {
-        if (angleIndex < 0 || angleIndex >= workingLocation.getAngles().length) {
-            System.out.println("no angle " + angleIndex + " in location " + workingLocation.locationIndex);
-            return;
-        }
 
         workingAngle = workingLocation.getAngle(angleIndex);
 
@@ -53,7 +48,25 @@ public class Game {
                 Angle.buildAngleString(workingLocation, workingAngle, workingLocation.getAngles()));
     }
 
-    public void toggleGameRunning() {
-        // pauses all threads
+    // back to the main menu. progress resets, same as a fresh START
+    public void showMainMenu() {
+        inGame = false;
+        workingAngle = null;
+        ui.setupMainMenu();
+    }
+
+    public boolean isMuted() {
+        return muted;
+    }
+
+    public void toggleMute() {
+        muted = !muted;
+        // TODO actually mute/unmute the audio here once sound is in
+        ui.refreshMuteButton(muted); // only the button text changes, no screen rebuild
+    }
+
+    public void goToLocation(int locationIndex) {
+        workingLocation = locations[locationIndex];
+        goToAngle(0);
     }
 }

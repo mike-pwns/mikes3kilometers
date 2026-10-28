@@ -18,7 +18,7 @@ public class Clickable {
 
     // Type-specific fields
     Integer targetAngle;
-    String targetLocation;
+    Integer targetLocation;
     String dialogue;
 
     // -- CONSTRUCTORS
@@ -68,7 +68,7 @@ public class Clickable {
         return clickableType;
     }
 
-    public String getTargetLocation() {
+    public int getTargetLocation() {
         return targetLocation;
     }
 

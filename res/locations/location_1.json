@@ -1,0 +1,11 @@
+{
+  "locationIndex":  1,
+  "angles": [
+    {
+      "angleIndex": 0,
+      "imgFilepath": "res/images/hoodirony.gif",
+      "clickables": [
+      ]
+    }
+  ]
+}

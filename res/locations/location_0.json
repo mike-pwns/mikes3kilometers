@@ -16,6 +16,12 @@
           "symbol": "*",
           "x": 0.63, "y": 0.40, "w": 0.02, "h": 0.02,
           "dialogue": "never touch a blacks mans radio!!"
+        },
+        {
+          "clickableType": "go",
+          "symbol": "V",
+          "x": 0.5, "y": 0.50, "w": 0.02, "h": 0.02,
+          "targetLocation": 1
         }
       ],
       "monsterSpawnCoords": [

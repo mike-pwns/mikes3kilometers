@@ -22,10 +22,11 @@ public class GameUI extends JFrame {
                     "\n\nthe photos are real and NOT edited (aside from some minor censoring in the colour #222222) - theyre taken with some unique settings, ill put the app I used in the github readme under resources" +
                     "\n\nokay.. and... what else? right!\ndear player, there are 2 easter eggs \n(its pretty obv if you find one)\nenjoy : )\n\n[CLICK TO CLOSE]";
     private static final String TIPS_DIALOGUE_TEXT =
-            "take your time to explore the areas, im too lazy to make you able to go back and all that. you may need to restart the game to go through the different branches." +
+            "take your time to explore the areas, get immersed! youre not really meant to go backwards, idk if ill implement that feature" +
                     "\n\nV -> GO TO" +
                     "\n* -> INSPECT" +
-                    "\n < > ^ -> CHANGE PERSPECTIVE/ANGLE" + "\n\n[CLICK TO CLOSE]";
+                    "\n < > ^ -> CHANGE PERSPECTIVE/ANGLE" +
+                    "\n\nuh i think thats about it. top right you'll have (right to left) exit, fullscreen, return to main menu, and mute/unmute audio" + "\n\n[CLICK TO CLOSE]";
 
     // -- FIELDS
 
@@ -78,7 +79,7 @@ public class GameUI extends JFrame {
 
     // super simple.. main menu is a unique screen, so like we build it from scratch.
     // whereas the game screens
-    private void setupMainMenu() {
+    public void setupMainMenu() {
 
         // Background and menu layout
         BackgroundPanel background = new BackgroundPanel(
@@ -168,26 +169,35 @@ public class GameUI extends JFrame {
         JPanel clickable_layer = new JPanel(null);
         clickable_layer.setOpaque(false);
 
-        // corner buttons on every screen, then whatever clickables were passed in
+        // corner buttons on every screen, right to left: exit, fullscreen, menu, mute
         List<Clickable> onScreenClickables = new ArrayList<>();
-        onScreenClickables.add(new Clickable("fullscreen", "[ ]", 0.94f, 0.02f, 0.02f, 0.02f));
         onScreenClickables.add(new Clickable("exit", "X", 0.97f, 0.02f, 0.02f, 0.02f));
+        onScreenClickables.add(new Clickable("fullscreen", "[ ]", 0.94f, 0.02f, 0.02f, 0.02f));
+
+        String muteString;
+        if (gameState.isMuted()) { muteString = "UNMUTE"; }
+        else { muteString = "MUTE"; }
+        onScreenClickables.add(new Clickable("mute", muteString, 0.862f, 0.02f, 0.06f, 0.02f));
         onScreenClickables.addAll(Arrays.asList(clickables));
 
+
+
+        // angle label, added after the buttons layer so it sits on top of the background
+        JLabel angleLabel = null;
+        if (angleText != null) {
+            onScreenClickables.add(new Clickable("menu", "MENU", 0.784f, 0.02f, 0.06f, 0.02f));
+            angleLabel = new JLabel(angleText);
+            angleLabel.setForeground(Color.WHITE);
+            angleLabel.putClientProperty("fontRatio", 0.03f); // rescaleFonts handles its size
+            panes.add(angleLabel, JLayeredPane.PALETTE_LAYER);
+
+        }
         for (Clickable clickable : onScreenClickables) {
             JButton button = clickable.createButton(this::handleClickable);
             clickable_layer.add(button);
         }
         panes.add(clickable_layer, JLayeredPane.PALETTE_LAYER);
 
-        // angle label, added after the buttons layer so it sits on top of the background
-        JLabel angleLabel = null;
-        if (angleText != null) {
-            angleLabel = new JLabel(angleText);
-            angleLabel.setForeground(Color.WHITE);
-            angleLabel.putClientProperty("fontRatio", 0.03f); // rescaleFonts handles its size
-            panes.add(angleLabel, JLayeredPane.PALETTE_LAYER);
-        }
         final JLabel label = angleLabel; // lambda below needs a final reference
 
         Runnable screenResizeRunnable = () -> {
@@ -237,7 +247,13 @@ public class GameUI extends JFrame {
     private void handleClickable(Clickable clickable) {
         switch (clickable.getClickableType()) {
 
-            // special main menu only
+            // special
+            case "menu":
+                gameState.showMainMenu();
+                break;
+            case "mute":
+                gameState.toggleMute();
+                break;
             case "fullscreen":
                 toggleFullscreen();
                 break;
@@ -251,6 +267,7 @@ public class GameUI extends JFrame {
                 gameState.goToAngle(clickable.getTargetAngle());
                 break;
             case "go":
+                gameState.goToLocation(clickable.getTargetLocation());
                 System.out.println("Go to " + clickable.getTargetLocation());
                 break;
             case "dialog":
@@ -478,6 +495,25 @@ public class GameUI extends JFrame {
             return font;
         } catch (Exception e) {
             return new Font("Arial", Font.BOLD, 12); // in case sum breaks we return this
+        }
+    }
+
+    // changes the text of the mute button without rebuilding the screen
+    public void refreshMuteButton(boolean muted) {
+        for (Component c : getContentPane().getComponents()) {
+            if (c instanceof JComponent layer) {
+                for (Component child : layer.getComponents()) {
+                    if (child instanceof JButton button
+                            && button.getClientProperty("clickable") instanceof Clickable clickable
+                            && clickable.getClickableType().equals("mute")) {
+                        String muteString;
+                        if (gameState.isMuted()) { muteString = "UNMUTE"; }
+                        else { muteString = "MUTE"; }
+                        button.setText(muteString);
+                        return;
+                    }
+                }
+            }
         }
     }
 
