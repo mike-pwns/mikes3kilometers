@@ -19,7 +19,7 @@
         {
           "clickableType": "turn",
           "symbol": ">",
-          "x": 0.95, "y": 0.3, "w": 0.02, "h": 0.02,
+          "x": 0.95, "y": 0.2, "w": 0.02, "h": 0.02,
           "targetAngle": 3
         },
         {
@@ -40,6 +40,12 @@
           "symbol": "*",
           "x": 0.32, "y": 0.42, "w": 0.02, "h": 0.02,
           "targetAngle": 2
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "V",
+          "x": 0.4, "y": 0.95, "w": 0.02, "h": 0.02,
+          "targetAngle": 0
         }
       ]
     },
@@ -48,19 +54,25 @@
       "clickables": [
         {
           "clickableType": "turn",
-          "symbol": ">",
-          "x": 0.95, "y": 0.65, "w": 0.02, "h": 0.02,
-          "targetAngle": 0
+          "symbol": "V",
+          "x": 0.45, "y": 0.95, "w": 0.02, "h": 0.02,
+          "targetAngle": 1
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.58, "y": 0.38, "w": 0.02, "h": 0.02,
+          "dialog": "another bench :/"
         }
       ]
-    },,
+    },
     {
       "angleIndex": 3,
       "clickables": [
         {
           "clickableType": "turn",
-          "symbol": ">",
-          "x": 0.95, "y": 0.65, "w": 0.02, "h": 0.02,
+          "symbol": "<",
+          "x": 0.03, "y": 0.85, "w": 0.02, "h": 0.02,
           "targetAngle": 0
         }
       ]

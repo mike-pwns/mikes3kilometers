@@ -6,6 +6,7 @@ public class Game {
     Location[] locations;
     Location workingLocation;
     Angle workingAngle;
+    int[] lastAngleIndex; // bandaid: for going back
     boolean muted = false;
     boolean inGame = false; // false while on the main menu
     // audio https://www.youtube.com/watch?v=tmlZeYnfw7g
@@ -20,6 +21,7 @@ public class Game {
             System.out.println("loc 0 is null dude!");
         }
 
+        lastAngleIndex = new int[locations.length];
         ui = new GameUI(this);
 //        soundEffectThread = new Thread(() -> {});
     }
@@ -46,8 +48,8 @@ public class Game {
 
     // switches to an angle of the current location and redraws the screen
     public void goToAngle(int angleIndex) {
-
         workingAngle = workingLocation.getAngle(angleIndex);
+        lastAngleIndex[workingLocation.getLocationIndex()] = angleIndex;
 
         ui.setGameScreen(
                 new GameUI.BackgroundPanel("res/images/location_" + workingLocation.getLocationIndex() + "/angle" + workingAngle.getAngleIndex() + ".jpg"),
@@ -59,6 +61,7 @@ public class Game {
     public void showMainMenu() {
         inGame = false;
         workingAngle = null;
+        lastAngleIndex = new int[locations.length];
         ui.setupMainMenu();
     }
 
@@ -74,6 +77,6 @@ public class Game {
 
     public void goToLocation(int locationIndex) {
         workingLocation = locations[locationIndex];
-        goToAngle(0);
+        goToAngle(lastAngleIndex[locationIndex]);
     }
 }
