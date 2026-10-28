@@ -1,18 +1,18 @@
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameUI extends JFrame {
 
     // -- CONSTS
 
-    private static final String FONT_PIXELTA = "res/fonts/Pixelta.ttf";
+    private static final String PIXELTA_FONT_FILEPATH = "res/fonts/Pixelta.ttf";
     private final String MAIN_MENU_BG_IMG = "res/images/bg3.jpg";
     private final String ICON_FILEPATH = "res/images/icon.png";
     public static final float DEFAULT_DERIVED_FONT_SIZE = 20f;
@@ -25,12 +25,11 @@ public class GameUI extends JFrame {
 
     // -- FIELDS
 
-    public static final Font pixelFont = loadPixelFont();
+    public static final Font pixeltaFont = loadPixelFont();
     private boolean fullscreen = false;
     private Rectangle previousWindowBounds;
     private final Game gameState;
     private JPanel activeDialoguePanel;
-    private Timer dialogueTimer;
 
     // -- CONSTRUCTOR
 
@@ -99,7 +98,7 @@ public class GameUI extends JFrame {
 
         JLabel subtitle = new JLabel("mischievous mike presents..");
         subtitle.setForeground(Color.WHITE);
-        subtitle.putClientProperty("fontRatio", 0.05f);
+        subtitle.putClientProperty("fontRatio", 0.04f);
         menuPanel.add(subtitle);
 
         JLabel title = new JLabel("3 KILOMETERS");
@@ -144,14 +143,16 @@ public class GameUI extends JFrame {
         clickables.add(infoBtn);
         clickables.add(exitBtn);
 
-        setGameScreen(background, clickables);
+        Clickable[] clickableArray = clickables.toArray(new Clickable[0]);
+        setGameScreen(background, clickableArray);
     }
 
 
     // this method just sets the actual screen.
-    // combines a BackgroundPanel (an image for a background) with
-    // a list of Clickables (stuff user can click on the painted backdrop) TODO change to JPanel?
-    public void setGameScreen(BackgroundPanel background_layer, List<Clickable> clickables) {
+// combines a BackgroundPanel (an image for a background) with
+// a list of Clickables (stuff user can click on the painted backdrop) TODO change to JPanel?
+    public void setGameScreen(BackgroundPanel background_layer, Clickable[] clickables) {
+
 
         // were essentially building a new pane (this is like a container of panes/layers of the screen: background + clickable pane)
         // note if u never saw this before, i didnt either, this container obj is just like dexters glass blood thing. JLayeredPane is the container, each glass pane is like JPanel. simple yeah?
@@ -165,8 +166,21 @@ public class GameUI extends JFrame {
         JPanel clickable_layer = new JPanel(null);
         clickable_layer.setOpaque(false);
 
-        // go thru each clickable we were given and add a button version of that to the
-        for (Clickable clickable : clickables) {
+        // clickables part 1: adding all the clickables to the list
+
+        List<Clickable> onScreenClickables = new ArrayList<>();
+
+        // top right corner buttons, on every screen: fullscreen ("[]") and exit ("X").
+        // these are present on every screen, so we can just add em once here
+        onScreenClickables.add(new Clickable("fullscreen", "[ ]", 0.94f, 0.02f, 0.02f, 0.02f));
+        onScreenClickables.add(new Clickable("exit", "X", 0.97f, 0.02f, 0.02f, 0.02f));
+
+        // add everything in the passed clickables array
+        onScreenClickables.addAll(Arrays.asList(clickables));
+
+        // clickables part 2: go thru each clickable and add a button version of that to the layer
+
+        for (Clickable clickable : onScreenClickables) {
             JButton button = clickable.createButton(this::handleClickable); // fancy c++ syntax just means we pass the handler method from THIS instance into whatever may call it in that method (the scope of THIS obj)
             clickable_layer.add(button);
         }
@@ -222,7 +236,6 @@ public class GameUI extends JFrame {
         });
     }
 
-
     // this is the infamous clickable
     // just takes the clickable that called the handle, and performs the necessary- whatever i want. i am supreme overlord here
     private void handleClickable(Clickable clickable) {
@@ -234,8 +247,10 @@ public class GameUI extends JFrame {
                 break;
             case "exit":
                 System.out.println("Appreciate your time!!!!!" +
-                                   "\n - @mike-pwns on Github");
+                        "\n - @mike-pwns on Github");
                 System.exit(0);
+
+                // others
             case "turn_left":
                 System.out.println("Turn left");
                 break;
@@ -247,7 +262,8 @@ public class GameUI extends JFrame {
                 break;
             case "dialog":
                 showDialogue(clickable);
-//              break;
+                System.out.println("dialogue -> " + clickable.getDialogue());
+                break;
             default:
                 System.out.println("ClIckaABle Iz unRECOgnIzed!!!!!!! Vau!");
                 break; // yea we dont need break but whatevs
@@ -268,7 +284,7 @@ public class GameUI extends JFrame {
                     instanceof Float ratio) {
 
                 component.setFont(
-                        pixelFont.deriveFont(
+                        pixeltaFont.deriveFont(
                                 Math.max(1f, ratio * height)
                         )
                 );
@@ -332,66 +348,64 @@ public class GameUI extends JFrame {
         });
     }
 
-    // takes a clickable, draws its dialogue right on top of it
+    // takes a clickable, draws its dialogue right on top of it.
+    // stays up until the player clicks it.
     private void showDialogue(Clickable clickable) {
 
         // pull the panes (this is like our workstation)
         JLayeredPane panes = (JLayeredPane) getContentPane();
 
-        // stage 1: remove old dialog stuff! (or return cuz theres nothing to show)
-
-        // if somethings already drawn and on cooldown, just cancel that timer
-        if (dialogueTimer != null) {
-            dialogueTimer.stop();
-            dialogueTimer = null;
-        }
-
-        // remove any dialogue if one exists (we do need this to be cleared for the sick dialogue were about to show)
+        // stage 1: remove the old dialogue if there is one (we're making a new one anyways)
         if (activeDialoguePanel != null) {
-            panes.remove(activeDialoguePanel); // and dont forget abt the panel!! were makin a new one anyways
+            panes.remove(activeDialoguePanel);
             activeDialoguePanel = null;
         }
 
-        // (kinda unnecessary but just to be safe yknow) check if there IS dialogue to show (ie not empty or null, as you can see below)
+        // nothing to show? just redraw and leave
         if (clickable.getDialogue() == null || clickable.getDialogue().isBlank()) {
-            panes.repaint(); // if nothin, just redraws all components
+            panes.repaint();
             return;
         }
 
-        // stage 2: build new dialog component
+        // stage 2: build the new dialogue component
 
         // pull screen dimensions
         int screenWidth = panes.getWidth();
         int screenHeight = panes.getHeight();
         double diagonal = Math.hypot(screenWidth, screenHeight);
 
-        // same font as the buttons: fontRatio of window height (scaling for some reason doesnt work, beats me)
-        Font dialogueFont = pixelFont.deriveFont(Math.max(1f, clickable.getFontRatio() * screenHeight));
+        // same font as the buttons: fontRatio of window height
+        float ratio = clickable.getFontRatio();
+        Font dialogueFont = pixeltaFont.deriveFont(Math.max(1f, ratio * screenHeight));
 
         // make the panel (again, dexters blood thingy, panel = 1 glass thing)
         JPanel dialoguePanel = new JPanel(new BorderLayout(0, 0));
         dialoguePanel.setBackground(Color.WHITE);
         dialoguePanel.setBorder(null);
 
-        // create the actual label (i, like you, also just learned this html crap is supported).
-        // like yeah jframe sux dih but okay man, lets just add html onto this too for the heck of it
+        // the label needs its text turned into html (escape the special characters, newlines become <br>)
+        String escaped = clickable.getDialogue()
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\n", "<br>");
+
         JLabel dialogueLabel = new JLabel(
                 "<html><div style='width:" + (screenWidth / 4)
                         + "px; text-align: center;'>"
-                        + clickable.getDialogue()
-                        // but theres also some niche things we gotta transcribe into proper html (ah, the frustration i had dude!)
-                        .replace("&", "&amp;")
-                        .replace("<", "&lt;")
-                        .replace(">", "&gt;")
-                        .replace("\n", "<br>")
+                        + escaped
                         + "</div></html>"
         );
 
-        // edit some simple properties, just read the func names im not narrating allat
         dialogueLabel.setForeground(Color.BLACK);
         dialogueLabel.setFont(dialogueFont);
         dialogueLabel.setHorizontalAlignment(SwingConstants.CENTER);
         dialogueLabel.setVerticalAlignment(SwingConstants.CENTER);
+
+        // this is the bit that was missing: rescaleFonts() only touches components with this property,
+        // so without it the text kept whatever size it had when it first appeared
+        dialogueLabel.putClientProperty("fontRatio", ratio);
+
         dialoguePanel.add(dialogueLabel, BorderLayout.CENTER);
 
         // stage 3: sizing and position
@@ -410,71 +424,24 @@ public class GameUI extends JFrame {
         int panelX = Math.clamp(x + w / 2 - panelWidth / 2, 0, screenWidth - panelWidth);
         int panelY = Math.clamp(y, 0, screenHeight - panelHeight);
 
-        // set bounds to what we just got
         dialoguePanel.setBounds(panelX, panelY, panelWidth, panelHeight);
-
-        // set cursor to the nice pointy one for aesthetics
         dialoguePanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // stage 4: dismissing the dialogue
-
-        // by clicking on it. just add a listener
+        // stage 4: dismissing the dialogue, by clicking on it
         dialoguePanel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-
-                // dismiss the timer
-                if (dialogueTimer != null) {
-                    dialogueTimer.stop();
-                    dialogueTimer = null;
-                }
-
-                // remove the panel
                 panes.remove(dialoguePanel);
                 activeDialoguePanel = null;
-                panes.repaint(); // redraw the thing
+                panes.repaint();
             }
         });
 
-
-        // also have a auto-remove feature with time (idk where i got this idea, but it felt right for a game like this)
-        int dialogue_text_length = clickable.getDialogue().length(); // just num chars in the text
-        int duration; // in ms
-
-        // calculate the time that the dialogs gonna be up
-        if (clickable.getDialogue().equals(INFO_DIALOGUE_TEXT)) {
-            duration = 999999999; // just dont go away. yeah talk about band aid solutions, but you try coding this in 3 days! i.. have schoolwork to get to!!
-        } else if (dialogue_text_length <= 20) {
-            duration = 1000;
-        } else if (dialogue_text_length <= 50) {
-            duration = 1500;
-        } else {
-            duration = 3000;
-        }
-
-        // setup a time for this clearing behaviour set for the duration
-        dialogueTimer = new Timer(duration, e -> {
-
-            // remove panel
-            panes.remove(dialoguePanel);
-
-            // if nothin
-//            if (activeDialoguePanel == dialoguePanel) {
-//                activeDialoguePanel = null;
-//                dialogueTimer = null;
-//            }
-            panes.repaint();
-        });
-        dialogueTimer.setRepeats(false); // we dont want repeats TODO check if ithis is false by default
-
-
-        // now that we went through the tedious setup..
-        // stage 5: we can finally put it into the ui!
+        // stage 5: put it on screen. no timer, so it stays until clicked
         activeDialoguePanel = dialoguePanel;
         panes.add(dialoguePanel, JLayeredPane.MODAL_LAYER);
         panes.revalidate();
-        panes.repaint(); // cant forget abt this!
-        dialogueTimer.start();
+        panes.repaint();
     }
 
 
@@ -482,7 +449,7 @@ public class GameUI extends JFrame {
     private static Font loadPixelFont() {
         try {
             // read the .ttf
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new File(FONT_PIXELTA));
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new File(PIXELTA_FONT_FILEPATH));
 
             // register the font with the graphix system, just meeans its chill to be used like any normal font.
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
@@ -496,7 +463,7 @@ public class GameUI extends JFrame {
 
     // -- BACKGROUND PANEL
 
-    private static class BackgroundPanel extends JPanel {
+    static class BackgroundPanel extends JPanel {
         private final Image background;
 
         public BackgroundPanel(String imagePath) {

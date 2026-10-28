@@ -11,6 +11,16 @@ public class Angle {
 
     // -- METHODS
 
+
+
+    public String getImgFilepath() {
+        return imgFilepath;
+    }
+
+    public Clickable[] getClickables() {
+        return clickables;
+    }
+
     // Just for debugging yknow
     @Override
     public String toString() {

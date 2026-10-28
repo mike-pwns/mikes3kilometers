@@ -7,13 +7,13 @@
         {
           "clickableType": "turn_right",
           "symbol": ">",
-          "x": 0.85, "y": 0.40, "w": 0.10, "h": 0.20,
+          "x": 0.1, "y": 0.1, "w": 0.1, "h": 0.1,
           "targetAngle": 1
         },
         {
           "clickableType": "dialog",
           "symbol": "*",
-          "x": 0.45, "y": 0.45, "w": 0.08, "h": 0.12,
+          "x": 0.45, "y": 0.45, "w": 0.02, "h": 0.02,
           "dialogue": "never touch a blacks mans radio!!"
         }
       ],

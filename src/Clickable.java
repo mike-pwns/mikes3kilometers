@@ -21,7 +21,11 @@ public class Clickable {
     String targetLocation;
     String dialogue;
 
-    // -- CONSTRUCTOR
+    // -- CONSTRUCTORS
+
+    // Gson uses this one. Field initializers only run when a constructor runs,
+    // so without it fontRatio stays 0 for any clickable whose JSON omits it.
+    public Clickable() {}
 
     public Clickable(String clickableType, String symbol, float x, float y, float w, float h) {
         this.clickableType = clickableType;
@@ -38,7 +42,7 @@ public class Clickable {
         button.putClientProperty("clickable", this);
         button.putClientProperty("fontRatio", fontRatio);
 
-        button.setFont(GameUI.pixelFont.deriveFont(GameUI.DEFAULT_DERIVED_FONT_SIZE));
+        button.setFont(GameUI.pixeltaFont.deriveFont(GameUI.DEFAULT_DERIVED_FONT_SIZE));
         button.setBackground(Color.WHITE);
         button.setForeground(Color.BLACK);
         button.setBorder(new LineBorder(Color.BLACK, 2));

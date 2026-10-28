@@ -53,7 +53,7 @@ public class Location {
                 System.out.println(location.toString());
             }
 
-
+            return locations;
 
 
         } catch (Exception e) {
@@ -67,4 +67,13 @@ public class Location {
     public String toString() {
         return "Location " + locationIndex + "\n" + Arrays.toString(angles);
     }
+
+    public Angle[] getAngles() {
+        return angles;
+    }
+
+    public Angle getAngle(int angleIndex) {
+        return angles[angleIndex];
+    }
+
 }
