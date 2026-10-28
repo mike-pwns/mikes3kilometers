@@ -24,7 +24,6 @@ public class GameUI extends JFrame {
                     "\n\nokay.. and... what else? right!\ndear player, there are 2 easter eggs \n(its pretty obv if you find one)\nenjoy : )\n\n[CLICK TO CLOSE]";
     private static final String TIPS_DIALOG_TEXT =
             "take your time to explore the areas, get immersed! " +
-                    "\nyoure not really meant to go backwards, idk if ill implement that feature" +
                     "\n\nthere arent really controls.. just click on the things \nno keybinds or nun of that" +
                     "\n\nuh i think thats about it. top right you'll have (right to left) " +
                     "\nexit, fullscreen, mute/unmute audio, and return to main menu" + "\n\n[CLICK TO CLOSE]";

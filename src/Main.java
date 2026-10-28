@@ -26,9 +26,9 @@ public class Main {
     public static void main(String[] args) {
 
         Game game = new Game();
-//        game.boot();
+        game.boot();
 
-        game.test(3, 1);
+//        game.test(3, 1);
 
     }
 }
