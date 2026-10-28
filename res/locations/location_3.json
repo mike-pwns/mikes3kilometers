@@ -1,0 +1,60 @@
+{
+  "locationIndex": 3,
+  "angles": [
+    {
+      "angleIndex": 0,
+      "clickables": [
+        {
+          "clickableType": "go",
+          "symbol": "V",
+          "x": 0.4,
+          "y": 0.95,
+          "w": 0.02,
+          "h": 0.02,
+          "targetLocation": 2
+        },
+        {
+          "clickableType": "go",
+          "symbol": "A",
+          "x": 0.5,
+          "y": 0.5,
+          "w": 0.02,
+          "h": 0.02,
+          "targetLocation": 4
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "<",
+          "x": 0.03,
+          "y": 0.5,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 1
+        }
+      ]
+    },
+    {
+      "angleIndex": 1,
+      "clickables": [
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.5,
+          "y": 0.4,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "that towers always been there. hella sus"
+        },
+        {
+          "clickableType": "turn",
+          "symbol": ">",
+          "x": 0.95,
+          "y": 0.7,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 0
+        }
+      ]
+    }
+  ]
+}
