@@ -20,7 +20,7 @@ public class GameUI extends JFrame {
             "had this idea for a while, but didnt have the *festive* inspiration for it. " +
                     "\nHad a few days so i made this." +
                     "\n\ngame is about my evening runs b4 sleep.. uh yeah that and imagination ig. inspired by ROAM120.exe" +
-                    "\n\nthe photos are real and NOT edited (aside from some minor censoring in the colour #222222) - theyre taken with some unique settings, ill put the app I used in the github readme under resources" +
+                    "\n\nthe photos are only minimally really edited (aside from some censoring in the colour #222222 for privacy yknow) - theyre taken with some unique settings, ill put the app I used in the github readme under resources" +
                     "\n\nokay.. and... what else? right!\ndear player, there are 2 easter eggs \n(its pretty obv if you find one)\nenjoy : )\n\n[CLICK TO CLOSE]";
     private static final String TIPS_DIALOG_TEXT =
             "take your time to explore the areas, get immersed! " +
