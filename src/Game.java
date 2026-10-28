@@ -50,7 +50,7 @@ public class Game {
         workingAngle = workingLocation.getAngle(angleIndex);
 
         ui.setGameScreen(
-                new GameUI.BackgroundPanel(workingAngle.getImgFilepath()),
+                new GameUI.BackgroundPanel("res/images/location_" + workingLocation.getLocationIndex() + "/angle" + workingAngle.getAngleIndex() + ".jpg"),
                 workingAngle.getClickables(),
                 Angle.buildAngleString(workingLocation, workingAngle, workingLocation.getAngles()));
     }

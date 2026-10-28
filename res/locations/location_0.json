@@ -3,7 +3,6 @@
   "angles": [
     {
       "angleIndex": 0,
-      "imgFilepath": "res/images/location_0/angle0.jpg",
       "clickables": [
         {
           "clickableType": "turn",
@@ -31,7 +30,6 @@
     },
     {
       "angleIndex": 1,
-      "imgFilepath": "res/images/location_0/angle1.jpg",
       "clickables": [
         {
           "clickableType": "turn",
@@ -50,7 +48,6 @@
     },
     {
       "angleIndex": 2,
-      "imgFilepath": "res/images/location_0/angle2.jpg",
       "clickables": [
         {
           "clickableType": "turn",
@@ -75,7 +72,6 @@
     },
     {
       "angleIndex": 3,
-      "imgFilepath": "res/images/location_0/angle3.jpg",
       "clickables": [
         {
           "clickableType": "turn",

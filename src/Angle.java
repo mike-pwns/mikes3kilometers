@@ -14,9 +14,9 @@ public class Angle {
     // -- METHODS
 
 
-    public String getImgFilepath() {
-        return imgFilepath;
-    }
+//    public String getImgFilepath() {
+//        return imgFilepath;
+//    }
 
     public Clickable[] getClickables() {
         return clickables;
