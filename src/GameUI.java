@@ -13,20 +13,21 @@ public class GameUI extends JFrame {
     // -- CONSTS
 
     private static final String PIXELTA_FONT_FILEPATH = "res/fonts/Pixelta.ttf";
-    private final String MAIN_MENU_BG_IMG = "res/images/bg3.jpg";
+    private final String MAIN_MENU_BG_IMG = "res/images/main_menu_bg.jpg";
     private final String ICON_FILEPATH = "res/images/icon.png";
     public static final float DEFAULT_DERIVED_FONT_SIZE = 20f;
-    private static final String INFO_DIALOGUE_TEXT =
-            "had this idea for a while, but didnt have the *festive* inspiration for it. Had a few days so i made this." +
+    private static final String INFO_DIALOG_TEXT =
+            "had this idea for a while, but didnt have the *festive* inspiration for it. " +
+                    "\nHad a few days so i made this." +
                     "\n\ngame is about my evening runs b4 sleep.. uh yeah that and imagination ig. inspired by ROAM120.exe" +
                     "\n\nthe photos are real and NOT edited (aside from some minor censoring in the colour #222222) - theyre taken with some unique settings, ill put the app I used in the github readme under resources" +
                     "\n\nokay.. and... what else? right!\ndear player, there are 2 easter eggs \n(its pretty obv if you find one)\nenjoy : )\n\n[CLICK TO CLOSE]";
-    private static final String TIPS_DIALOGUE_TEXT =
-            "take your time to explore the areas, get immersed! youre not really meant to go backwards, idk if ill implement that feature" +
-                    "\n\nV -> GO TO" +
-                    "\n* -> INSPECT" +
-                    "\n < > ^ -> CHANGE PERSPECTIVE/ANGLE" +
-                    "\n\nuh i think thats about it. top right you'll have (right to left) exit, fullscreen, return to main menu, and mute/unmute audio" + "\n\n[CLICK TO CLOSE]";
+    private static final String TIPS_DIALOG_TEXT =
+            "take your time to explore the areas, get immersed! " +
+                    "\nyoure not really meant to go backwards, idk if ill implement that feature" +
+                    "\n\nthere arent really controls.. just click on the things \nno keybinds or nun of that" +
+                    "\n\nuh i think thats about it. top right you'll have (right to left) " +
+                    "\nexit, fullscreen, mute/unmute audio, and return to main menu" + "\n\n[CLICK TO CLOSE]";
 
     // -- FIELDS
 
@@ -34,8 +35,8 @@ public class GameUI extends JFrame {
     private boolean fullscreen = false;
     private Rectangle previousWindowBounds;
     private final Game gameState;
-    private JPanel activeDialoguePanel;
-    private Timer dialogueTimer;
+    private JPanel activeDialogPanel;
+    private Timer dialogTimer;
 
     // -- CONSTRUCTOR
 
@@ -51,6 +52,7 @@ public class GameUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("mikes3kilometers");
         setIconImage(new ImageIcon(ICON_FILEPATH).getImage());
+        setMinimumSize(new Dimension(480, 360));
 
         // draw the main menu
         setupMainMenu();
@@ -139,9 +141,9 @@ public class GameUI extends JFrame {
 
         // main menu clickables (for the "game" its all read from the json)
         Clickable infoBtn = new Clickable("dialog", "info", 0.275f, 0.27f, 0.08f, 0.03f);
-        infoBtn.setDialogue(INFO_DIALOGUE_TEXT); // just its a longer dialogue and putting it all here is whew! a lot!
+        infoBtn.setDialog(INFO_DIALOG_TEXT); // just its a longer dialogue and putting it all here is whew! a lot!
         Clickable tipsBtn = new Clickable("dialog", "tips", 0.275f, 0.37f, 0.08f, 0.03f);
-        tipsBtn.setDialogue(TIPS_DIALOGUE_TEXT); // just its a longer dialogue and putting it all here is whew! a lot!
+        tipsBtn.setDialog(TIPS_DIALOG_TEXT); // just its a longer dialogue and putting it all here is whew! a lot!
 
         List<Clickable> clickables = new ArrayList<>();
         clickables.add(infoBtn);
@@ -271,7 +273,7 @@ public class GameUI extends JFrame {
                 System.out.println("Go to " + clickable.getTargetLocation());
                 break;
             case "dialog":
-                showDialogue(clickable);
+                showDialog(clickable);
 //                System.out.println("dialogue -> " + clickable.getDialogue());
                 break;
             default:
@@ -360,125 +362,128 @@ public class GameUI extends JFrame {
 
     // takes a clickable, draws its dialogue right on top of it.
     // stays up until the player clicks it.
-    private void showDialogue(Clickable clickable) {
+    // takes a clickable, draws its dialog right on top of it.
+// the box is only as wide as the text needs, up to a max width. stays up until clicked, or fades by length
+    private void showDialog(Clickable clickable) {
 
-        // pull the panes (this is like our workstation)
         JLayeredPane panes = (JLayeredPane) getContentPane();
 
-        // stage 1: remove the old dialogue if there is one (we're making a new one anyways)
-        if (activeDialoguePanel != null) {
-            panes.remove(activeDialoguePanel);
-            activeDialoguePanel = null;
+        // stage 1: remove the old dialog if there is one
+        if (activeDialogPanel != null) {
+            panes.remove(activeDialogPanel);
+            activeDialogPanel = null;
         }
 
-        // nothing to show? just redraw and leave
-        if (clickable.getDialogue() == null || clickable.getDialogue().isBlank()) {
+        if (clickable.getDialog() == null || clickable.getDialog().isBlank()) {
             panes.repaint();
             return;
         }
 
-        // stage 2: build the new dialogue component
+        // stage 2: build the component
 
-        // pull screen dimensions
         int screenWidth = panes.getWidth();
         int screenHeight = panes.getHeight();
-        double diagonal = Math.hypot(screenWidth, screenHeight);
 
-        // same font as the buttons: fontRatio of window height
         float ratio = clickable.getFontRatio();
-        Font dialogueFont = pixeltaFont.deriveFont(Math.max(1f, ratio * screenHeight));
+        Font dialogFont = pixeltaFont.deriveFont(Math.max(1f, ratio * screenHeight));
 
-        // make the panel (again, dexters blood thingy, panel = 1 glass thing)
-        JPanel dialoguePanel = new JPanel(new BorderLayout(0, 0));
-        dialoguePanel.setBackground(Color.WHITE);
-        dialoguePanel.setBorder(null);
+        // measure the text with the dialog font, so the box can be sized to the words
+        FontMetrics fm = getFontMetrics(dialogFont);
+        int maxTextWidth = screenWidth / 3;
 
-        // the label needs its text turned into html (escape the special characters, newlines become <br>)
-        String escaped = clickable.getDialogue()
+        // widest line in the text (each \n is its own line)
+        int widestLine = 0;
+        for (String line : clickable.getDialog().split("\n")) {
+            widestLine = Math.max(widestLine, fm.stringWidth(line));
+        }
+
+        // short text gets a narrow box. long text is capped and wraps inside it
+// short text gets a narrow box. anything longer wraps at the max width
+        int textWidth = Math.min(Math.max(widestLine, 0), maxTextWidth) + 0;
+        JPanel dialogPanel = new JPanel(new BorderLayout(0, 0));
+        dialogPanel.setBackground(Color.WHITE);
+        dialogPanel.setBorder(null);
+
+        // escape the special characters, newlines become <br>
+        String escaped = clickable.getDialog()
                 .replace("&", "&amp;")
                 .replace("<", "&lt;")
                 .replace(">", "&gt;")
                 .replace("\n", "<br>");
 
-        JLabel dialogueLabel = new JLabel(
-                "<html><div style='width:" + (screenWidth / 4)
-                        + "px; text-align: center;'>"
-                        + escaped
-                        + "</div></html>"
-        );
+        JLabel dialogLabel = new JLabel("<html><div style='width:" + textWidth
+                + "px; text-align: center;'>" + escaped + "</div></html>");
 
-        dialogueLabel.setForeground(Color.BLACK);
-        dialogueLabel.setFont(dialogueFont);
-        dialogueLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        dialogueLabel.setVerticalAlignment(SwingConstants.CENTER);
+        dialogLabel.setForeground(Color.BLACK);
+        dialogLabel.setFont(dialogFont);
+        dialogLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        dialogLabel.setVerticalAlignment(SwingConstants.CENTER);
 
-        // this is the bit that was missing: rescaleFonts() only touches components with this property,
-        // so without it the text kept whatever size it had when it first appeared
-        dialogueLabel.putClientProperty("fontRatio", ratio);
+        // rescaleFonts() picks this up on resize
+        dialogLabel.putClientProperty("fontRatio", ratio);
 
-        dialoguePanel.add(dialogueLabel, BorderLayout.CENTER);
+        dialogPanel.add(dialogLabel, BorderLayout.CENTER);
 
-        // stage 3: sizing and position
+        // stage 3: size and position
 
-        Dimension size = dialoguePanel.getPreferredSize();
+        Dimension size = dialogPanel.getPreferredSize();
 
-        // same scaling as the buttons
         int x = (int) (screenWidth * clickable.getX());
         int y = (int) (screenHeight * clickable.getY());
-        int w = (int) (diagonal * clickable.getW());
-        int h = (int) (diagonal * clickable.getH());
+        int w = (int) (Math.hypot(screenWidth, screenHeight) * clickable.getW());
 
-        // compile the bounds info based on the clickables info that we got above
-        int panelWidth = Math.min(Math.max(w, size.width), screenWidth);
-        int panelHeight = Math.max(h, size.height);
+        // only as wide as the text needs (capped by the screen). centered over the clickable
+        // the box is never shorter than the clickable it came from
+        int clickableHeight = (int) (Math.hypot(screenWidth, screenHeight) * clickable.getH());
+        int panelWidth = Math.min(size.width, screenWidth);
+        int panelHeight = Math.max(size.height, clickableHeight);
         int panelX = Math.clamp(x + w / 2 - panelWidth / 2, 0, screenWidth - panelWidth);
         int panelY = Math.clamp(y, 0, screenHeight - panelHeight);
+        dialogPanel.setBounds(panelX, panelY, panelWidth, panelHeight);
+        dialogPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        dialoguePanel.setBounds(panelX, panelY, panelWidth, panelHeight);
-        dialoguePanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        // stage 4: dismissing the dialogue, by clicking on it or timer
-        dialoguePanel.addMouseListener(new java.awt.event.MouseAdapter() {
+        // stage 4: dismiss by clicking, or by the timer
+        dialogPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (dialogueTimer != null) {
-                    dialogueTimer.stop();
-                    dialogueTimer = null;
+                if (dialogTimer != null) {
+                    dialogTimer.stop();
+                    dialogTimer = null;
                 }
-                panes.remove(dialoguePanel);
-                activeDialoguePanel = null;
+                panes.remove(dialogPanel);
+                activeDialogPanel = null;
                 panes.repaint();
             }
         });
 
-        // stays up for the info text (it's the long one), otherwise it fades based on length
-        int length = clickable.getDialogue().length(); // just num chars
-        int duration; // in ms
+        // stays up for the long texts, otherwise fades based on length
+        int length = clickable.getDialog().length();
+        int duration;
 
-        if (clickable.getDialogue().equals(INFO_DIALOGUE_TEXT) || clickable.getDialogue().equals(TIPS_DIALOGUE_TEXT)) {
-            duration = Integer.MAX_VALUE; // yeah so.. just click it
+        if (clickable.getDialog().equals(INFO_DIALOG_TEXT) || clickable.getDialog().equals(TIPS_DIALOG_TEXT)) {
+            duration = Integer.MAX_VALUE;
         } else if (length <= 20) {
-            duration = 1000;
-        } else if (length <= 50) {
             duration = 1500;
+        } else if (length <= 50) {
+            duration = 2500;
         } else {
-            duration = 3000;
+            duration = 4000;
         }
 
-        dialogueTimer = new javax.swing.Timer(duration, e -> {
-            panes.remove(dialoguePanel);
-            activeDialoguePanel = null;
-            dialogueTimer = null;
+        dialogTimer = new javax.swing.Timer(duration, e -> {
+            panes.remove(dialogPanel);
+            activeDialogPanel = null;
+            dialogTimer = null;
             panes.repaint();
         });
-        dialogueTimer.setRepeats(false);
+        dialogTimer.setRepeats(false);
 
-        // stage 5: put it on screen, then start the auto dismisser timer
-        activeDialoguePanel = dialoguePanel;
-        panes.add(dialoguePanel, JLayeredPane.MODAL_LAYER);
+        // stage 5: show it, then start the timer
+        activeDialogPanel = dialogPanel;
+        panes.add(dialogPanel, JLayeredPane.MODAL_LAYER);
         panes.revalidate();
         panes.repaint();
-        dialogueTimer.start();
+        dialogTimer.start();
     }
 
 

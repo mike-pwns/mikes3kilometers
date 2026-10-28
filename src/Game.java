@@ -30,6 +30,13 @@ public class Game {
         System.out.println("game booted");
     }
 
+    public void test(int locationIndex, int angleIndex) {
+        boot();
+        inGame = true;
+        workingLocation = locations[locationIndex];
+        goToAngle(angleIndex);
+    }
+
     // start game
     public void start() {
         inGame = true;

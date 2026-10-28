@@ -19,7 +19,7 @@ public class Clickable {
     // Type-specific fields
     Integer targetAngle;
     Integer targetLocation;
-    String dialogue;
+    String dialog;
 
     // -- CONSTRUCTORS
 
@@ -60,8 +60,8 @@ public class Clickable {
         return targetAngle;
     }
 
-    public void setDialogue(String text) {
-        dialogue = text;
+    public void setDialog(String text) {
+        dialog = text;
     }
 
     public String getClickableType() {
@@ -72,8 +72,8 @@ public class Clickable {
         return targetLocation;
     }
 
-    public String getDialogue() {
-        return dialogue;
+    public String getDialog() {
+        return dialog;
     }
 
     public String getSymbol() {
@@ -109,8 +109,8 @@ public class Clickable {
                 ? " targetAngle=" + targetAngle : "")
                 + (targetLocation != null
                 ? " targetLocation=" + targetLocation : "")
-                + (dialogue != null
-                ? " dialogue=\"" + dialogue + "\"" : "")
+                + (dialog != null
+                ? " dialogue=\"" + dialog + "\"" : "")
                 + "}";
     }
 }

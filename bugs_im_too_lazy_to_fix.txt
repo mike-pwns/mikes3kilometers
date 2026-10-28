@@ -6,3 +6,7 @@ alr anyways heres the list for you to exploit if your gonna try to pwn mike-pwns
 - dialogue does not resize properly. (skipped debuggin this cuz like u have 1-3s to resize it, and whos racing to resize the window when theyre reading dialogue?)
   --> you could get this bug by opening the info dialogue, then fullscreening.
 - in main menu, the cursor for [START] doesnt change.. it did before, then it stopped working
+
+
+other notes:
+- dialog and dialogue are interchanged here, expecially with comments. this is cuz me from 3 hours ago used dialogue, and current me (2:40am me)is confused as to why im writing it with the ue. so i refactored a bunch of it and its prolly inconsistent
