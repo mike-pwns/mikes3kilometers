@@ -20,12 +20,8 @@
           "clickableType": "dialog",
           "symbol": "*",
           "x": 0.55, "y": 0.45, "w": 0.02, "h": 0.02,
-          "dialog": "calm luh bench"
+          "dialog": "calm luh bench.. kinda wish i had a jacket"
         }
-      ],
-      "monsterSpawnCoords": [
-        [25, 32],
-        [100, 100]
       ]
     },
     {
@@ -41,10 +37,9 @@
           "clickableType": "dialog",
           "symbol": "*",
           "x": 0.85, "y": 0.25, "w": 0.02, "h": 0.02,
-          "dialog": "isnt it weird\nthat yknow"
+          "dialog": "this doesnt look that\nscary during the day"
         }
-      ],
-      "monsterSpawnCoords": []
+      ]
     },
     {
       "angleIndex": 2,
@@ -65,7 +60,7 @@
           "clickableType": "dialog",
           "symbol": "*",
           "x": 0.5, "y": 0.5, "w": 0.02, "h": 0.02,
-          "dialog": "i wonder how this got here"
+          "dialog": "the dog poop makes sense, but why\nis there an air filter here of all places??"
         }
       ],
       "monsterSpawnCoords": []

@@ -16,8 +16,7 @@
           "x": 0.3, "y": 0.5, "w": 0.02, "h": 0.02,
           "targetLocation": 3
         }
-      ],
-      "monsterSpawnCoords": []
+      ]
     }
   ]
 }

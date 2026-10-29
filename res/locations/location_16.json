@@ -39,16 +39,16 @@
       "angleIndex": 2,
       "clickables": [
         {
-          "clickableType": "turn",
+          "clickableType": "dialog",
           "symbol": "V",
           "x": 0.35, "y": 0.95, "w": 0.02, "h": 0.02,
-          "targetAngle": 1
+          "dialog": "imma say paths closed lil bro"
         },
         {
           "clickableType": "dialog",
           "symbol": "!",
-          "x": 0.5, "y": 0.5, "w": 0.02, "h": 0.02,
-          "dialog": "yo wsg its me monsterous mike. i am the monster that women fear at night!\nappreciate your time, now get out of my game!!"
+          "x": 0.6, "y": 0.2, "w": 0.02, "h": 0.02,
+          "dialog": "yo wsg its me monsterous mike. \nim the reason women are scared to walk alone at night, my bad ladies. \nappreciate your time, now get out of my game!!"
         },
         {
           "clickableType": "dialog",
