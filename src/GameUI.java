@@ -13,18 +13,18 @@ public class GameUI extends JFrame {
     // -- CONSTS
 
     private static final String PIXELTA_FONT_FILEPATH = "res/fonts/Pixelta.ttf";
-    private final String MAIN_MENU_BG_IMG = "res/images/main_menu_bg.jpg";
+    private final String MAIN_MENU_BG_IMG = "res/images/location_7/angle2.jpg";
     private final String ICON_FILEPATH = "res/images/icon.png";
     public static final float DEFAULT_DERIVED_FONT_SIZE = 20f;
     private static final String INFO_DIALOG_TEXT =
-            "had this idea for a while, but didnt have the *festive* inspiration for it. " +
-                    "\nHad a few days so i made this." +
-                    "\n\ngame is about my evening runs b4 sleep.. uh yeah that and imagination ig. inspired by ROAM0120.exe" +
-                    "\n\nthe photos are only minimally really edited (aside from some censoring in the colour #222222 for privacy yknow) - theyre taken with some unique settings, ill put the app I used in the github readme under resources" +
-                    "\n\nokay.. and... what else? right!\ndear player, there are 2 easter eggs \n(its pretty obv if you find one)\nenjoy : )\n\n[CLICK TO CLOSE]";
+            "had this idea for a while, but didnt have the *festive* inspiration for it." +
+                    "\nhad a few days so i made this." +
+                    "\n\nmain goal of this proj is to showcase the \"horror\" of a normally-familiar running route (ie what i see and think while running this route). think of this as an art piece if that helps you - a really weird and unique one i guess. its like, were not scared of the dark per se, but theres sum abt it that is scary - thats what i tried to capture (jeez i sound like a posh artist.. ahem.. wheres my wine?)" +
+                    "\n\nthe photos are all taken by me. some are minimally edited for privacys sake. theyre taken with a flashlight + some unique (cool) settings, ill put the app I used in the github readme under resources" +
+                    "\n\nokay.. and... what else? right!\nthere may or may not be a monster too..\nenjoy : )\n\n[CLICK TO CLOSE]";
     private static final String TIPS_DIALOG_TEXT =
             "take your time to explore the areas, get immersed! " +
-                    "\n\nthere arent really controls.. just click on the things \nno keybinds or nun of that" +
+                    "\n\nthere arent really controls.. just click on the things \nno keybinds or nun of that (too much work XD)" +
                     "\n\ni would recommend playing with audio, cuz like thats atmosphere and all, but this is just a proof of concept so like who cares" +
                     "\n\nuh i think thats about it. top right you'll have (right to left) " +
                     "\nexit, fullscreen, mute/unmute audio, and return to main menu" + "\n\n[CLICK TO CLOSE]";

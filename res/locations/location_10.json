@@ -111,7 +111,7 @@
           "clickableType": "go",
           "symbol": "A",
           "x": 0.28, "y": 0.25, "w": 0.02, "h": 0.02,
-          "targetAngle": 14
+          "targetLocation": 14
         }
       ]
     }

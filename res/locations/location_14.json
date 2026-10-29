@@ -6,15 +6,106 @@
       "clickables": [
         {
           "clickableType": "go",
+          "symbol": "<",
+          "x": 0.03, "y": 0.95, "w": 0.02, "h": 0.02,
+          "targetLocation": 10
+        },
+        {
+          "clickableType": "go",
+          "symbol": ">",
+          "x": 0.95, "y": 0.95, "w": 0.02, "h": 0.02,
+          "targetLocation": 13
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "A",
+          "x": 0.45, "y": 0.3, "w": 0.02, "h": 0.02,
+          "targetAngle": 1
+        }
+      ]
+    },
+    {
+      "angleIndex": 1,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "V",
+          "x": 0.45, "y": 0.95, "w": 0.02, "h": 0.02,
+          "targetAngle": 0
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "A",
+          "x": 0.55, "y": 0.3, "w": 0.02, "h": 0.02,
+          "targetAngle": 2
+        }
+      ]
+    },
+    {
+      "angleIndex": 2,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": ">",
+          "x": 0.95, "y": 0.3, "w": 0.02, "h": 0.02,
+          "targetAngle": 4
+        },
+        {
+          "clickableType": "turn",
           "symbol": "V",
           "x": 0.35, "y": 0.95, "w": 0.02, "h": 0.02,
-          "targetLocation": 1
+          "targetAngle": 1
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "A",
+          "x": 0.35, "y": 0.35, "w": 0.02, "h": 0.02,
+          "targetAngle": 3
+        }
+      ]
+    },
+    {
+      "angleIndex": 3,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "V",
+          "x": 0.32, "y": 0.95, "w": 0.02, "h": 0.02,
+          "targetAngle": 2
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "A",
+          "x": 0.5, "y": 0.37, "w": 0.02, "h": 0.02,
+          "targetAngle": 5
+        }
+      ]
+    },
+    {
+      "angleIndex": 4,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "<",
+          "x": 0.03, "y": 0.7, "w": 0.02, "h": 0.02,
+          "targetAngle": 2
+        }
+      ]
+    },
+    {
+      "angleIndex": 5,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "V",
+          "x": 0.45, "y": 0.95, "w": 0.02, "h": 0.02,
+          "targetAngle": 3
         },
         {
           "clickableType": "go",
           "symbol": "A",
-          "x": 0.45, "y": 0.3, "w": 0.02, "h": 0.02,
-          "targetLocation": 7
+          "x": 0.5, "y": 0.37, "w": 0.02, "h": 0.02,
+          "targetLocation": 15
         }
       ]
     }

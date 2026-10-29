@@ -10,3 +10,4 @@ alr anyways heres the list for you to exploit if your gonna try to pwn mike-pwns
 
 other notes:
 - dialog and dialogue are interchanged here, expecially with comments. this is cuz me from 3 hours ago used dialogue, and current me (2:40am me)is confused as to why im writing it with the ue. so i refactored a bunch of it and its prolly inconsistent
+- in location 14, the tree and the last path angles are swapped by index. not really a bug, but its just sloppy yknow on my end

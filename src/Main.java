@@ -28,7 +28,7 @@ public class Main {
         Game game = new Game();
 //        game.boot();
 
-        game.test(10, 1);
+        game.test(16, 2);
 
     }
 }
