@@ -44,6 +44,15 @@
           "w": 0.02,
           "h": 0.02,
           "targetAngle": 0
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "click here for free robux",
+          "x": 0.65,
+          "y": 0.7,
+          "w": 0.15,
+          "h": 0.02,
+          "dialog": "sike brah thats not in the budget"
         }
       ]
     },
@@ -90,6 +99,15 @@
           "w": 0.02,
           "h": 0.02,
           "targetAngle": 2
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.65,
+          "y": 0.7,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "so quiet"
         }
       ]
     },

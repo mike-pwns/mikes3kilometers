@@ -76,6 +76,15 @@
           "w": 0.02,
           "h": 0.02,
           "targetAngle": 1
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.5,
+          "y": 0.5,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "honestly the scariest part of the run, i always think somethings about to come at me from here"
         }
       ]
     },
