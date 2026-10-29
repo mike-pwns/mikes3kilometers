@@ -13,6 +13,8 @@ public class AudioPlayer {
     public void setLoop(boolean loop) {
         this.loop = loop;
     }
+
+
     public void playAudio(String filename) {
         stopAudio();
 
@@ -23,28 +25,82 @@ public class AudioPlayer {
             return;
         }
 
-        try (AudioInputStream stream =
-                     AudioSystem.getAudioInputStream(file)) {
+        AudioFormat[] formats = {
+                new AudioFormat(44100f, 16, 2, true, false),
+                new AudioFormat(44100f, 16, 1, true, false),
+                new AudioFormat(22050f, 16, 1, true, false),
+                new AudioFormat(22050f, 16, 2, true, false)
+        };
 
-            clip = AudioSystem.getClip();
-            clip.open(stream);
+        try {
+            AudioInputStream original =
+                    AudioSystem.getAudioInputStream(file);
 
-            // Loop indefinitely
-            if (loop) {
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
-            } else {
-                clip.start();
+            AudioFormat sourceFormat = original.getFormat();
+            original.close();
+
+            // Try each available audio mixer
+            for (Mixer.Info mixerInfo : AudioSystem.getMixerInfo()) {
+
+                Mixer mixer = AudioSystem.getMixer(mixerInfo);
+
+                // Try the original format first
+                AudioFormat[] attempts = new AudioFormat[formats.length + 1];
+                attempts[0] = sourceFormat;
+                System.arraycopy(formats, 0, attempts, 1, formats.length);
+
+                for (AudioFormat format : attempts) {
+
+                    DataLine.Info info = new DataLine.Info(Clip.class, format);
+
+                    if (!mixer.isLineSupported(info)) {
+                        continue;
+                    }
+
+                    try (AudioInputStream input =
+                                 AudioSystem.getAudioInputStream(file)) {
+
+                        AudioInputStream playable = input;
+
+                        if (!sourceFormat.matches(format)) {
+                            if (!AudioSystem.isConversionSupported(
+                                    format, sourceFormat)) {
+                                continue;
+                            }
+
+                            playable = AudioSystem.getAudioInputStream(
+                                    format, input);
+                        }
+
+                        Clip newClip = (Clip) mixer.getLine(info);
+                        newClip.open(playable);
+
+                        clip = newClip;
+
+                        if (loop) {
+                            clip.loop(Clip.LOOP_CONTINUOUSLY);
+                        } else {
+                            clip.start();
+                        }
+
+                        applyMute();
+                        paused = false;
+                        pausePosition = 0;
+
+                        return;
+
+                    } catch (LineUnavailableException |
+                             IOException |
+                             IllegalArgumentException e) {
+                        // Try another format or mixer
+                    }
+                }
             }
 
-            // Apply mute setting
-            applyMute();
+            System.err.println(
+                    "No compatible audio output found for: " + filename);
 
-            paused = false;
-            pausePosition = 0;
-
-        } catch (UnsupportedAudioFileException e) {
-            System.err.println("Unsupported audio format. Use PCM WAV: " + filename);
-        } catch (IOException | LineUnavailableException e) {
+        } catch (UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
         }
     }

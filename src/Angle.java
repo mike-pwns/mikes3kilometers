@@ -35,6 +35,6 @@ public class Angle {
     }
 
     public static String buildAngleString(Location location, Angle angle, Angle[] angles) {
-        return ("loc index: " +location.getLocationIndex() + "   angle: ( "+(angle.getAngleIndex() + 1) + " / " + angles.length + " )");
+        return ("angle: ( "+(angle.getAngleIndex() + 1) + " / " + angles.length + " )");
     }
 }

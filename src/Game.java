@@ -113,7 +113,7 @@ public class Game {
         goToAngle(lastAngleIndex[locationIndex]);
     }
 
-    public void mikesSpecialMethod() {
+    public void mikesSpecialDialogMethod() {
         musicPlayer.pauseAudio();
         specialMusicPlayer.playAudio("");
     }

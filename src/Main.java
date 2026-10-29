@@ -25,7 +25,7 @@ public class Main {
 
     public static void main(String[] args) {
         Game game = new Game();
-        game.test(12, 0);
+        game.test(16, 2);
 
     }
 }
