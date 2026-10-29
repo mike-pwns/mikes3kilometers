@@ -57,6 +57,15 @@
           "targetAngle": 1
         },
         {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.58,
+          "y": 0.37,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "yet another bench.. but this ones facing, nothing?"
+        },
+        {
           "clickableType": "turn",
           "symbol": "A",
           "x": 0.35, "y": 0.35, "w": 0.02, "h": 0.02,
@@ -89,6 +98,16 @@
           "symbol": "<",
           "x": 0.03, "y": 0.7, "w": 0.02, "h": 0.02,
           "targetAngle": 2
+        },
+
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.85,
+          "y": 0.4,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "i swear i saw something there"
         }
       ]
     },

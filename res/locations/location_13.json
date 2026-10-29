@@ -38,6 +38,15 @@
           "symbol": "A",
           "x": 0.9, "y": 0.85, "w": 0.02, "h": 0.02,
           "targetAngle": 3
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.45,
+          "y": 0.7,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "def feels like theres something lurking around here"
         }
       ]
     },

@@ -131,6 +131,15 @@
           "w": 0.02,
           "h": 0.02,
           "targetAngle": 5
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.45,
+          "y": 0.35,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "what happened here?"
         }
       ]
     },

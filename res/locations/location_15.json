@@ -45,6 +45,16 @@
           "h": 0.02,
           "targetAngle": 0
         },
+
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.85,
+          "y": 0.5,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "you see this too, right?"
+        },
         {
           "clickableType": "turn",
           "symbol": "A",
@@ -67,6 +77,15 @@
           "w": 0.02,
           "h": 0.02,
           "targetAngle": 1
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.15,
+          "y": 0.4,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "im scared.. we should go back.."
         }
       ]
     },
@@ -90,6 +109,15 @@
           "w": 0.02,
           "h": 0.02,
           "targetAngle": 4
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.83,
+          "y": 0.25,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "is that a person?"
         }
       ]
     },
@@ -122,6 +150,15 @@
           "w": 0.02,
           "h": 0.02,
           "targetAngle": 6
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.58,
+          "y": 0.22,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "nah, just my imagination acting up"
         }
       ]
     },
@@ -136,6 +173,15 @@
           "w": 0.02,
           "h": 0.02,
           "targetAngle": 4
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.65,
+          "y": 0.4,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "something about a memorial. why do \npeople care about being remembered?"
         }
       ]
     },
@@ -182,6 +228,15 @@
           "w": 0.02,
           "h": 0.02,
           "targetAngle": 6
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.48,
+          "y": 0.4,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "nope, not going there.\nlets just get home.."
         }
       ]
     },
@@ -205,6 +260,15 @@
           "w": 0.02,
           "h": 0.02,
           "targetLocation": 16
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.59,
+          "y": 0.4,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "someone was just here"
         }
       ]
     }

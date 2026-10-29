@@ -272,7 +272,7 @@ public class GameUI extends JFrame {
                 break;
             case "go":
                 gameState.goToLocation(clickable.getTargetLocation());
-                System.out.println("Go to " + clickable.getTargetLocation());
+//                System.out.println("Go to " + clickable.getTargetLocation());
                 break;
             case "dialog":
                 showDialog(clickable);
@@ -367,6 +367,10 @@ public class GameUI extends JFrame {
     // takes a clickable, draws its dialog right on top of it.
 // the box is only as wide as the text needs, up to a max width. stays up until clicked, or fades by length
     private void showDialog(Clickable clickable) {
+
+        if (clickable.getSymbol().equals("!")) {
+            // change music to sum bs
+        }
 
         JLayeredPane panes = (JLayeredPane) getContentPane();
 
