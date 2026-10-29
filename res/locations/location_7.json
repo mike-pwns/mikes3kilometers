@@ -66,7 +66,7 @@
           "y": 0.3,
           "w": 0.02,
           "h": 0.02,
-          "dialog": "this is a sick sign\nread up!"
+          "dialog": "blah blah blah\nthese signs are so useless\nlike no ones planning to go in"
         },
         {
           "clickableType": "turn",
@@ -99,6 +99,15 @@
           "w": 0.02,
           "h": 0.02,
           "targetAngle": 4
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.5,
+          "y": 0.5,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "i feel like if there was a monster, it would randomly just spawn here"
         }
       ]
     },
@@ -145,6 +154,15 @@
           "w": 0.02,
           "h": 0.02,
           "targetAngle": 4
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.5,
+          "y": 0.5,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "now this is like really dark.. i might get scared here"
         }
       ]
     },

@@ -62,7 +62,7 @@
           "clickableType": "dialog",
           "symbol": "*",
           "x": 0.58, "y": 0.38, "w": 0.02, "h": 0.02,
-          "dialog": "another bench :/"
+          "dialog": "pretty sure someone just left, whatever"
         }
       ]
     },
@@ -74,6 +74,15 @@
           "symbol": "<",
           "x": 0.03, "y": 0.85, "w": 0.02, "h": 0.02,
           "targetAngle": 0
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.5,
+          "y": 0.4,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "at night these trees look straight out of a horror game\ni wonder how long theyve been here"
         }
       ]
     }

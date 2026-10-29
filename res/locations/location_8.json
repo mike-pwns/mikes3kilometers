@@ -38,6 +38,15 @@
           "symbol": ">",
           "x": 0.95, "y": 0.75, "w": 0.02, "h": 0.02,
           "targetAngle": 0
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.5,
+          "y": 0.7,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "this way is the 2km route, in case i needa get home faster"
         }
       ]
     },
@@ -55,6 +64,15 @@
           "symbol": "<",
           "x": 0.03, "y": 0.75, "w": 0.02, "h": 0.02,
           "targetAngle": 0
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.5,
+          "y": 0.6,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "this way the full 3km route"
         }
       ]
     }

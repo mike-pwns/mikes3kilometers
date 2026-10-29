@@ -44,12 +44,30 @@
           "symbol": "V",
           "x": 0.75, "y": 0.95, "w": 0.02, "h": 0.02,
           "targetAngle": 0
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.5,
+          "y": 0.5,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "i heard still water is dangerous\ndont remember from where"
         }
       ]
     },
     {
       "angleIndex": 2,
       "clickables": [
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.45,
+          "y": 0.1,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "what the hell is that"
+        },
         {
           "clickableType": "turn",
           "symbol": "<",
@@ -66,6 +84,15 @@
           "symbol": "<",
           "x": 0.03, "y": 0.4, "w": 0.02, "h": 0.02,
           "targetAngle": 4
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.55,
+          "y": 0.4,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "this looks like that one scene from dexter"
         },
         {
           "clickableType": "turn",
