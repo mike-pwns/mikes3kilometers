@@ -7,14 +7,54 @@
         {
           "clickableType": "go",
           "symbol": "V",
-          "x": 0.35, "y": 0.95, "w": 0.02, "h": 0.02,
-          "targetLocation": 1
+          "x": 0.34, "y": 0.95, "w": 0.02, "h": 0.02,
+          "targetLocation": 7
         },
+        {
+          "clickableType": "turn",
+          "symbol": "<",
+          "x": 0.14, "y": 0.45, "w": 0.02, "h": 0.02,
+          "targetAngle": 1
+        },
+        {
+          "clickableType": "turn",
+          "symbol": ">",
+          "x": 0.7, "y": 0.45, "w": 0.02, "h": 0.02,
+          "targetAngle": 2
+        }
+      ]
+    },
+    {
+      "angleIndex": 1,
+      "clickables": [
         {
           "clickableType": "go",
           "symbol": "A",
-          "x": 0.45, "y": 0.3, "w": 0.02, "h": 0.02,
+          "x": 0.38, "y": 0.63, "w": 0.02, "h": 0.02,
+          "targetLocation": 9
+        },
+        {
+          "clickableType": "turn",
+          "symbol": ">",
+          "x": 0.95, "y": 0.75, "w": 0.02, "h": 0.02,
+          "targetAngle": 0
+        }
+      ]
+    },
+    {
+      "angleIndex": 2,
+      "clickables": [
+        {
+          "clickableType": "go",
+          "symbol": "A",
+          "x": 0.65, "y": 0.45, "w": 0.02, "h": 0.02,
           "targetLocation": 7
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "<",
+          "x": 0.03, "y": 0.75, "w": 0.02, "h": 0.02,
+          "targetAngle": 0
         }
       ]
     }

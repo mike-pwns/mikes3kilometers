@@ -8,13 +8,70 @@
           "clickableType": "go",
           "symbol": "V",
           "x": 0.35, "y": 0.95, "w": 0.02, "h": 0.02,
-          "targetLocation": 1
+          "targetLocation": 8
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "A",
+          "x": 0.53, "y": 0.3, "w": 0.02, "h": 0.02,
+          "targetAngle": 1
+        }
+      ]
+    },
+    {
+      "angleIndex": 1,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "V",
+          "x": 0.7, "y": 0.95, "w": 0.02, "h": 0.02,
+          "targetAngle": 0
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "*",
+          "x": 0.41, "y": 0.26, "w": 0.02, "h": 0.02,
+          "targetAngle": 2
+        }
+      ]
+    },
+    {
+      "angleIndex": 2,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "V",
+          "x": 0.36, "y": 0.95, "w": 0.02, "h": 0.02,
+          "targetAngle": 1
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.48, "y": 0.3, "w": 0.02, "h": 0.02,
+          "dialog": "yep, another bench, why did i take so many photos of benches?"
+        },
+        {
+          "clickableType": "turn",
+          "symbol": ">",
+          "x": 0.95, "y": 0.45, "w": 0.02, "h": 0.02,
+          "targetAngle": 3
+        }
+      ]
+    },
+    {
+      "angleIndex": 3,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "<",
+          "x": 0.03, "y": 0.85, "w": 0.02, "h": 0.02,
+          "targetAngle": 2
         },
         {
           "clickableType": "go",
           "symbol": "A",
-          "x": 0.45, "y": 0.3, "w": 0.02, "h": 0.02,
-          "targetLocation": 7
+          "x": 0.43, "y": 0.25, "w": 0.02, "h": 0.02,
+          "targetLocation": 10
         }
       ]
     }
