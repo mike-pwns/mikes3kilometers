@@ -1,13 +1,12 @@
 public class Game {
 
     GameUI ui;
-    Monster monster; // operates on a thread system
-    Thread gameThread, soundEffectThread;
+    AudioPlayer musicPlayer, specialMusicPlayer;
+    AudioPlayer soundEffectPlayer; Thread soundEffectThread;
     Location[] locations;
     Location workingLocation;
     Angle workingAngle;
     int[] lastAngleIndex; // bandaid: for going back
-    boolean muted = false;
     boolean inGame = false; // false while on the main menu
     // audio https://www.youtube.com/watch?v=tmlZeYnfw7g
 
@@ -21,14 +20,20 @@ public class Game {
             System.out.println("loc 0 is null dude!");
         }
 
+        musicPlayer = new AudioPlayer();
+        specialMusicPlayer = new AudioPlayer();
+        soundEffectPlayer = new AudioPlayer();
+        soundEffectPlayer.setLoop(false);
+        soundEffectThread = new Thread(() -> {
+
+        });
         lastAngleIndex = new int[locations.length];
         ui = new GameUI(this);
-//        soundEffectThread = new Thread(() -> {});
     }
 
     public void boot() {
         ui.setVisible(true);
-        // TODO start music here
+        musicPlayer.playAudio("horror_ambience.wav");
         System.out.println("game booted");
     }
 
@@ -44,6 +49,8 @@ public class Game {
         inGame = true;
         workingLocation = locations[0];
         goToAngle(0);
+//        soundEffectThread.start();
+
     }
 
     // switches to an angle of the current location and redraws the screen
@@ -51,8 +58,28 @@ public class Game {
         workingAngle = workingLocation.getAngle(angleIndex);
         lastAngleIndex[workingLocation.getLocationIndex()] = angleIndex;
 
+        GameUI.BackgroundPanel backgroundPanel;
+        if (workingLocation.getLocationIndex() == 12 && workingAngle.getAngleIndex() == 1) { // another bandaid solution for sum bs
+            backgroundPanel = new GameUI.BackgroundPanel("res/images/location_" + workingLocation.getLocationIndex() + "/angle" + workingAngle.getAngleIndex() + ".gif");
+
+            // play hood irony music
+            musicPlayer.pauseAudio();
+            specialMusicPlayer.playAudio("hoodirony.wav");
+        }
+        else if (workingLocation.getLocationIndex() == 12 && workingAngle.getAngleIndex() == 0) { // another bandaid solution for sum bs
+            backgroundPanel = new GameUI.BackgroundPanel("res/images/location_" + workingLocation.getLocationIndex() + "/angle" + workingAngle.getAngleIndex() + ".jpg");
+            // resume the serious music
+            specialMusicPlayer.stopAudio();
+            musicPlayer.resumeAudio();
+
+
+        }
+        else {
+            backgroundPanel = new GameUI.BackgroundPanel("res/images/location_" + workingLocation.getLocationIndex() + "/angle" + workingAngle.getAngleIndex() + ".jpg");
+        }
+
         ui.setGameScreen(
-                new GameUI.BackgroundPanel("res/images/location_" + workingLocation.getLocationIndex() + "/angle" + workingAngle.getAngleIndex() + ".jpg"),
+                backgroundPanel,
                 workingAngle.getClickables(),
                 Angle.buildAngleString(workingLocation, workingAngle, workingLocation.getAngles()));
     }
@@ -62,16 +89,22 @@ public class Game {
         inGame = false;
         workingAngle = null;
         lastAngleIndex = new int[locations.length];
+
+        specialMusicPlayer.stopAudio();
+        musicPlayer.resumeAudio();
+
         ui.setupMainMenu();
     }
 
-    public boolean isMuted() {
-        return muted;
+
+    public AudioPlayer getMusicPlayer() {
+        return musicPlayer;
     }
 
+
     public void toggleMute() {
-        muted = !muted;
-        // TODO actually mute/unmute the audio here once sound is in
+        boolean muted = musicPlayer.toggleMuted();
+        soundEffectPlayer.toggleMuted(); // both r mutted but well just track the music one
         ui.refreshMuteButton(muted); // only the button text changes, no screen rebuild
     }
 
@@ -79,4 +112,10 @@ public class Game {
         workingLocation = locations[locationIndex];
         goToAngle(lastAngleIndex[locationIndex]);
     }
+
+    public void mikesSpecialMethod() {
+        musicPlayer.pauseAudio();
+        specialMusicPlayer.playAudio("");
+    }
+
 }

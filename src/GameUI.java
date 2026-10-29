@@ -81,6 +81,7 @@ public class GameUI extends JFrame {
 
     // -- METHODS
 
+
     // super simple.. main menu is a unique screen, so like we build it from scratch.
     // whereas the game screens
     public void setupMainMenu() {
@@ -179,7 +180,7 @@ public class GameUI extends JFrame {
         onScreenClickables.add(new Clickable("fullscreen", "[ ]", 0.94f, 0.02f, 0.02f, 0.02f));
 
         String muteString;
-        if (gameState.isMuted()) { muteString = "UNMUTE"; }
+        if (gameState.getMusicPlayer().isMuted()) { muteString = "UNMUTE"; }
         else { muteString = "MUTE"; }
         onScreenClickables.add(new Clickable("mute", muteString, 0.862f, 0.02f, 0.06f, 0.02f));
         onScreenClickables.addAll(Arrays.asList(clickables));
@@ -249,6 +250,9 @@ public class GameUI extends JFrame {
     // this is the infamous clickable
     // just takes the clickable that called the handle, and performs the necessary- whatever i want. i am supreme overlord here
     private void handleClickable(Clickable clickable) {
+
+        gameState.soundEffectPlayer.playAudio("typewriter.wav");
+
         switch (clickable.getClickableType()) {
 
             // special
@@ -518,7 +522,7 @@ public class GameUI extends JFrame {
                             && button.getClientProperty("clickable") instanceof Clickable clickable
                             && clickable.getClickableType().equals("mute")) {
                         String muteString;
-                        if (gameState.isMuted()) { muteString = "UNMUTE"; }
+                        if (gameState.getMusicPlayer().isMuted()) { muteString = "UNMUTE"; }
                         else { muteString = "MUTE"; }
                         button.setText(muteString);
                         return;

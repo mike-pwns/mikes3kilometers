@@ -46,11 +46,12 @@ public class Location {
                 // read as Location objects.
                 String path = LOCATIONS_DATA_DIR_FILEPATH + "location_" + location_index + ".json";
                 Location location = gson.fromJson(Files.readString(Path.of(path)), Location.class);
+
 //                System.out.println(json.toString());
 
                 locations[location_index] = location;
 
-                System.out.println(location.toString());
+//                System.out.println(location.toString());
             }
 
             return locations;

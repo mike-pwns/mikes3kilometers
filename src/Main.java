@@ -24,11 +24,8 @@
 public class Main {
 
     public static void main(String[] args) {
-
         Game game = new Game();
-//        game.boot();
-
-        game.test(15, 6);
+        game.test(12, 0);
 
     }
 }
