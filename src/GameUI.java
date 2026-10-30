@@ -373,7 +373,7 @@ public class GameUI extends JFrame {
     private void showDialog(Clickable clickable) {
 
         if (clickable.getSymbol().equals("!")) {
-            // change music to sum bs
+            gameState.mikesSpecialDialogMethod();
         }
 
         JLayeredPane panes = (JLayeredPane) getContentPane();
