@@ -1,72 +1,58 @@
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
-import java.io.File;
+import com.google.gson.Gson;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
 
 public class Location {
 
     int locationIndex;
-    Angle[] angles; // list of all pics
+    Angle[] angles;
 
-
-
-    private static final String LOCATIONS_DATA_DIR_FILEPATH = "res/locations/";
-
-//    public Location(int locationIndex, Angle[] angles) {
-//        this.locationIndex = locationIndex;
-//        this.angles = angles;
-//    }
+    private static final int LOCATION_COUNT = 17;
+    private static final String LOCATIONS_DATA_DIR = "/res/locations/";
 
     public static Location[] loadLocations() {
 
-        // big idea: just read all the files
-        // how many locations are there? just ask the directory!
-
         try {
-
-            // init gson
             Gson gson = new Gson();
+            Location[] locations = new Location[LOCATION_COUNT];
 
-            // get number of locations by the amount of files in the locations dir (yea not foolproof, but sue me this is a calm luh project)
-             int numLocations = Objects.requireNonNull(new File(LOCATIONS_DATA_DIR_FILEPATH).list()).length;
+            for (int i = 0; i < LOCATION_COUNT; i++) {
 
-            Location[] locations = new Location[numLocations];
+                String resourcePath =
+                        LOCATIONS_DATA_DIR + "location_" + i + ".json";
 
-            for (int location_index = 0; location_index < numLocations; location_index++) {
-                // read each file as "location_" + index + ".json"
+                try (InputStream stream =
+                             Location.class.getResourceAsStream(resourcePath)) {
 
-                // read as Location objects.
-                String path = LOCATIONS_DATA_DIR_FILEPATH + "location_" + location_index + ".json";
-                Location location = gson.fromJson(Files.readString(Path.of(path)), Location.class);
+                    if (stream == null) {
+                        throw new IllegalStateException(
+                                "Missing resource: " + resourcePath
+                        );
+                    }
 
-//                System.out.println(json.toString());
+                    try (Reader reader = new InputStreamReader(
+                            stream, StandardCharsets.UTF_8)) {
 
-                locations[location_index] = location;
-
-//                System.out.println(location.toString());
+                        locations[i] = gson.fromJson(reader, Location.class);
+                    }
+                }
             }
 
             return locations;
 
-
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
-
     }
 
     @Override
     public String toString() {
-        return "Location " + locationIndex + "\n" + Arrays.toString(angles);
+        return "Location " + locationIndex;
     }
 
     public Angle[] getAngles() {
@@ -78,7 +64,10 @@ public class Location {
     }
 
     public Angle getAngle(int angleIndex) {
+        if (angles == null || angleIndex < 0 || angleIndex >= angles.length) {
+            return null;
+        }
+
         return angles[angleIndex];
     }
-
 }

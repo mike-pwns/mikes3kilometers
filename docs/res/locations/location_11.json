@@ -1,0 +1,106 @@
+{
+  "locationIndex": 11,
+  "angles": [
+    {
+      "angleIndex": 0,
+      "clickables": [
+        {
+          "clickableType": "go",
+          "symbol": "V",
+          "x": 0.35,
+          "y": 0.95,
+          "w": 0.02,
+          "h": 0.02,
+          "targetLocation": 8
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "A",
+          "x": 0.47,
+          "y": 0.25,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 1
+        }
+      ]
+    },
+    {
+      "angleIndex": 1,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "V",
+          "x": 0.5,
+          "y": 0.95,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 0
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "<",
+          "x": 0.03,
+          "y": 0.7,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 2
+        },
+        {
+          "clickableType": "turn",
+          "symbol": ">",
+          "x": 0.95,
+          "y": 0.2,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 3
+        },
+        {
+          "clickableType": "go",
+          "symbol": "A",
+          "x": 0.53,
+          "y": 0.45,
+          "w": 0.02,
+          "h": 0.02,
+          "targetLocation": 12
+        }
+      ]
+    },
+    {
+      "angleIndex": 2,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": ">",
+          "x": 0.95,
+          "y": 0.3,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 1
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.5,
+          "y": 0.5,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "honestly the scariest part of the run, i always think somethings about to come at me from here"
+        }
+      ]
+    },
+    {
+      "angleIndex": 3,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "<",
+          "x": 0.03,
+          "y": 0.8,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 1
+        }
+      ]
+    }
+  ]
+}

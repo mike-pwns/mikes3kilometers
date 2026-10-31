@@ -22,12 +22,17 @@ public class Game {
 
     private boolean wasInSpecialScene = false;
 
-    private static final String AMBIENCE_TRACK = "horror_ambience.wav";
-    private static final String CAREFREE = "carefree.wav";
+    private static final String AMBIENCE_TRACK =
+            "/res/audio/horror_ambience.wav";
 
-    private static final String HOODIRONY = "hoodirony.wav";
+    private static final String CAREFREE =
+            "/res/audio/carefree.wav";
 
-    private static final String CLICK_SOUND = "typewriter.wav";
+    private static final String HOODIRONY =
+            "/res/audio/hoodirony.wav";
+
+    private static final String CLICK_SOUND =
+            "/res/audio/typewriter.wav";
 
     private static final String[] SOUND_EFFECTS =
             AudioPlayer.loadSoundEffects();
@@ -46,7 +51,6 @@ public class Game {
 
         musicPlayer.setLoop(true);
         specialMusicPlayer.setLoop(true);
-
         soundEffectPlayer.setLoop(false);
 
         lastAngleIndex = new int[locations.length];
@@ -59,15 +63,12 @@ public class Game {
 
         ui.setVisible(true);
 
-        musicPlayer.playAudio(AMBIENCE_TRACK);
+        // Ambience intentionally starts when the user unmutes.
 
         System.out.println("Game booted");
     }
 
 
-    /**
-     * Development/testing entry point.
-     */
     public void test(int locationIndex, int angleIndex) {
 
         if (!isValidLocationIndex(locationIndex)) {
@@ -81,14 +82,8 @@ public class Game {
     }
 
 
-    /**
-     * Starts a fresh game at the first location.
-     */
     public void start() {
-
         startAtLocation(0, 0);
-
-//        startSoundEffectThread();
     }
 
 
@@ -107,9 +102,6 @@ public class Game {
     }
 
 
-    /**
-     * Switches to an angle of the current location.
-     */
     public void goToAngle(int angleIndex) {
 
         if (workingLocation == null) {
@@ -140,19 +132,13 @@ public class Game {
                 locationIndex == SPECIAL_LOCATION_INDEX
                         && actualAngleIndex == SPECIAL_ANGLE_INDEX;
 
-
-        // Only change audio when entering or leaving the special scene.
         if (isSpecialScene && !wasInSpecialScene) {
-
             enterSpecialScene();
-
         } else if (!isSpecialScene && wasInSpecialScene) {
-
             leaveSpecialScene();
         }
 
         wasInSpecialScene = isSpecialScene;
-
 
         String extension = isSpecialScene ? ".gif" : ".jpg";
 
@@ -174,53 +160,42 @@ public class Game {
     }
 
 
-    /**
-     * Pauses normal ambience and starts special music.
-     */
     private void enterSpecialScene() {
 
         musicPlayer.pauseAudio();
 
         specialMusicPlayer.playAudio(HOODIRONY);
-
-//        stopSoundEffectThread();
     }
 
 
-    /**
-     * Stops special music and restores normal ambience.
-     */
     private void leaveSpecialScene() {
 
         specialMusicPlayer.stopAudio();
 
-        musicPlayer.resumeAudio();
-
-//        startSoundEffectThread();
+        if (!musicPlayer.isMuted()) {
+            musicPlayer.resumeAudio();
+        }
     }
 
 
-    /**
-     * Returns to the main menu and resets navigation progress.
-     */
     public void showMainMenu() {
 
         inGame = false;
+        talkedToMike = false;
 
         workingAngle = null;
         workingLocation = null;
 
         wasInSpecialScene = false;
 
-//        stopSoundEffectThread();
+        stopSoundEffectThread();
 
         lastAngleIndex = new int[locations.length];
 
         specialMusicPlayer.stopAudio();
 
-        if (musicPlayer.isPaused()) {
-            musicPlayer.resumeAudio();
-        } else {
+        if (!musicPlayer.isMuted()) {
+            musicPlayer.stopAudio();
             musicPlayer.playAudio(AMBIENCE_TRACK);
         }
 
@@ -233,29 +208,55 @@ public class Game {
     }
 
 
-    /**
-     * Toggles global audio mute state.
-     */
     public void toggleMute() {
 
-        boolean muted = !musicPlayer.isMuted();
+        boolean newMutedState = !musicPlayer.isMuted();
 
-        musicPlayer.setMuted(muted);
-        specialMusicPlayer.setMuted(muted);
-        soundEffectPlayer.setMuted(muted);
+        musicPlayer.setMuted(newMutedState);
+        specialMusicPlayer.setMuted(newMutedState);
+        soundEffectPlayer.setMuted(newMutedState);
 
-        ui.refreshMuteButton(muted);
+        if (!newMutedState) {
+
+            if (wasInSpecialScene) {
+
+                specialMusicPlayer.playAudio(HOODIRONY);
+
+            } else if (musicPlayer.isPaused()) {
+
+                musicPlayer.resumeAudio();
+
+            } else {
+
+                musicPlayer.stopAudio();
+                musicPlayer.playAudio(AMBIENCE_TRACK);
+            }
+
+        } else {
+
+            musicPlayer.stopAudio();
+            specialMusicPlayer.stopAudio();
+            soundEffectPlayer.stopAudio();
+        }
+
+        ui.refreshMuteButton(newMutedState);
+
+        System.out.println("[Game] Audio muted: " + newMutedState);
     }
 
 
-    /**
-     * Changes location and restores its previously selected angle.
-     */
     public void goToLocation(int locationIndex) {
 
         if (!isValidLocationIndex(locationIndex)) {
             System.err.println("Invalid location index: " + locationIndex);
             return;
+        }
+
+        if (locationIndex == 16) {
+            musicPlayer.pauseAudio();
+        }
+        else if (musicPlayer.isPaused()) {
+            musicPlayer.resumeAudio();
         }
 
         workingLocation = locations[locationIndex];
@@ -266,16 +267,15 @@ public class Game {
     }
 
 
+    boolean talkedToMike;
+
     public void mikesSpecialDialogMethod() {
 
-//        stopSoundEffectThread();
-
-        if (!musicPlayer.isPaused()) {
-
-            musicPlayer.pauseAudio();
-
+        if (!talkedToMike) {
             specialMusicPlayer.playAudio(CAREFREE);
+            talkedToMike = true;
         }
+
     }
 
 
@@ -288,24 +288,12 @@ public class Game {
     }
 
 
-    // =========================================================
-    // SOUND EFFECT THREAD MANAGEMENT
-    // =========================================================
-
-    /**
-     * Starts the sound effect thread if one isn't already running.
-     */
     private synchronized void startSoundEffectThread() {
 
-        if (!inGame) {
+        if (!inGame || wasInSpecialScene) {
             return;
         }
 
-        if (wasInSpecialScene) {
-            return;
-        }
-
-        // Prevent duplicate threads.
         if (soundEffectThread != null && soundEffectThread.isAlive()) {
             return;
         }
@@ -347,15 +335,12 @@ public class Game {
 
             } catch (InterruptedException e) {
 
-                // Expected when stopping the thread.
                 Thread.currentThread().interrupt();
 
             } finally {
 
                 synchronized (Game.this) {
 
-                    // Only clear the reference if this is still
-                    // the currently registered thread.
                     if (soundEffectThread == Thread.currentThread()) {
                         soundEffectThread = null;
                         soundEffectThreadRunning = false;
@@ -368,23 +353,19 @@ public class Game {
         });
 
         soundEffectThread.setName("SoundEffectThread");
-
         soundEffectThread.start();
     }
 
 
-    /**
-     * Stops the sound effect thread safely.
-     */
     private synchronized void stopSoundEffectThread() {
 
         soundEffectThreadRunning = false;
 
         if (soundEffectThread != null) {
-
             soundEffectThread.interrupt();
-
             soundEffectThread = null;
         }
+
+        soundEffectPlayer.stopAudio();
     }
 }

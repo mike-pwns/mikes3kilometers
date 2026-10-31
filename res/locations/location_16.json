@@ -48,7 +48,7 @@
           "clickableType": "dialog",
           "symbol": "!",
           "x": 0.6, "y": 0.2, "w": 0.02, "h": 0.02,
-          "dialog": "yo wsg its me monsterous mike. \nim the reason women are scared to walk alone at night, my bad ladies. \nappreciate your time, now get out of my game!!"
+          "dialog": "yo wsg its me monsterous mike. \nim the monster demons pray to avoid. probably the reason women are scared to walk alone at night too. my bad ladies.\nanyways, games over gng, get outta here"
         },
         {
           "clickableType": "dialog",
@@ -57,7 +57,7 @@
           "dialog": "its bedtime already, no more laps"
         },
         {
-          "clickableType": "menu",
+          "clickableType": "end_run",
           "symbol": "END RUN",
           "x": 0.9, "y": 0.3, "w": 0.07, "h": 0.02
         }

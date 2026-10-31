@@ -1,0 +1,87 @@
+{
+  "locationIndex":  0,
+  "angles": [
+    {
+      "angleIndex": 0,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": ">",
+          "x": 0.95, "y": 0.8, "w": 0.02, "h": 0.02,
+          "targetAngle": 1
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "*",
+          "x": 0.37, "y": 0.3, "w": 0.02, "h": 0.02,
+          "targetAngle": 2
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.55, "y": 0.45, "w": 0.02, "h": 0.02,
+          "dialog": "calm luh bench.. kinda wish i had a jacket"
+        }
+      ]
+    },
+    {
+      "angleIndex": 1,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "<",
+          "x": 0.03, "y": 0.80, "w": 0.02, "h": 0.02,
+          "targetAngle": 0
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.85, "y": 0.25, "w": 0.02, "h": 0.02,
+          "dialog": "this doesnt look that\nscary during the day"
+        }
+      ]
+    },
+    {
+      "angleIndex": 2,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "V",
+          "x": 0.85, "y": 0.94, "w": 0.02, "h": 0.02,
+          "targetAngle": 0
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "A",
+          "x": 0.25, "y": 0.04, "w": 0.02, "h": 0.02,
+          "targetAngle": 3
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.5, "y": 0.5, "w": 0.02, "h": 0.02,
+          "dialog": "the dog poop makes sense, but why\nis there an air filter here of all places??"
+        }
+      ],
+      "monsterSpawnCoords": []
+    },
+    {
+      "angleIndex": 3,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "V",
+          "x": 0.25, "y": 0.95, "w": 0.02, "h": 0.02,
+          "targetAngle": 2
+        },
+        {
+          "clickableType": "go",
+          "symbol": ">",
+          "x": 0.95, "y": 0.6, "w": 0.02, "h": 0.02,
+          "targetLocation": 1
+        }
+      ],
+      "monsterSpawnCoords": []
+    }
+  ]
+}

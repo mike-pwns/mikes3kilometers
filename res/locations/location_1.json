@@ -38,7 +38,7 @@
           "clickableType": "dialog",
           "symbol": "*",
           "x": 0.5, "y": 0.4, "w": 0.02, "h": 0.02,
-          "dialog": "only darkness for a while, thats too bad"
+          "dialog": "its gonna be dark for a while, thats too bad"
         }
       ]
     }

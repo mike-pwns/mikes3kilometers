@@ -17,17 +17,19 @@ public class GameUI extends JFrame {
     private final String ICON_FILEPATH = "res/images/icon.png";
     public static final float DEFAULT_DERIVED_FONT_SIZE = 20f;
     private static final String INFO_DIALOG_TEXT =
-            "had this idea for a while, but didnt have the *festive* inspiration for it." +
-                    "\nhad a few days so i made this." +
-                    "\n\nmain goal of this proj is to showcase the \"horror\" of a normally-familiar running route (ie what i see and think while running this route). think of this as an art piece if that helps you - a really weird and unique one i guess. its like, were not scared of the dark per se, but theres sum abt it that is scary - thats what i tried to capture (jeez i sound like a posh artist.. ahem.. wheres my wine?)" +
+            "had this idea for a while, but didnt have the *festive* inspiration for it. had a few days so i made this." +
+                    "\n\nmain goal of this proj is to showcase the horror esc vibe of a normally-familiar running route. think of this as an art piece if that helps you - a really weird and unique one i guess. its like, were not scared of the dark per se, but theres sum abt seeing a familiar place in the dark that can be scary - thats what i tried to capture (jeez i sound like a posh artist.. ahem.. wheres my wine?)" +
                     "\n\nthe photos are all taken by me. some are minimally edited for privacys sake. theyre taken with a flashlight + some unique (cool) settings, ill put the app I used in the github readme under resources" +
-                    "\n\nokay.. and... what else? right!\nthere may or may not be a monster too..\nenjoy : )\n\n[CLICK TO CLOSE]";
+                    "\n\nokay.. and... what else? right\nthere may or may not be a monster too.. stay vigilant!\nenjoy : )\n\n[CLICK TO CLOSE]";
     private static final String TIPS_DIALOG_TEXT =
             "take your time to explore the areas, get immersed! " +
                     "\n\nthere arent really controls.. just click on the things \nno keybinds or nun of that (too much work XD)" +
-                    "\n\ni would recommend playing with audio, cuz like thats atmosphere and all, but this is just a proof of concept so like who cares" +
-                    "\n\nuh i think thats about it. top right you'll have (right to left) " +
-                    "\nexit, fullscreen, mute/unmute audio, and return to main menu" + "\n\n[CLICK TO CLOSE]";
+                    "\n\ni would recommend playing with audio, cuz like thats atmosphere and all (to load audio on browser u gotta press unmute button top-right of the screen). also, the fullscreen [ ] btn works on browser too!" +
+                    "\n\nuh i think thats about it. top right youll have (right to left) exit, fullscreen, mute/unmute audio, and return to main menu" + "\n\n[CLICK TO CLOSE]";
+    private static final String CHEERPJ_DIALOG_TEXT =
+            "just a notice that cheerpj (the thing i used to port the jframe bs to webassembly) was ported with ai in a few hours. i basically vibecoded / vibedebugged more in an afternoon than satan, baal, and moloch could in a year combined. but dw the core game i made with my own 2 hands" +
+                 "\n\npoint is, game might be a bit janky at times cuz of the whole porting thing. the native version runs much smoother (and has centered text!!), but thats the classic *works on my machine* dilemma. maybe ill upload the original executable too, idk yet" +
+                    "\n\n[CLICK TO CLOSE]";
 
     // -- FIELDS
 
@@ -45,16 +47,14 @@ public class GameUI extends JFrame {
         this.gameState = gameState;
 
         // just default to this size cuz like every game does that
-        setSize(1280, 720);
-        setLocationRelativeTo(null); // centers it on the screen
-
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setBackground(Color.BLACK); // This is HUGE. thank me for this.
 
         // extra nice stuff
+        setUndecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("mikes3kilometers");
-        setIconImage(new ImageIcon(ICON_FILEPATH).getImage());
-        setMinimumSize(new Dimension(480, 360));
+        setIconImage(loadImage(ICON_FILEPATH));
 
         // draw the main menu
         setupMainMenu();
@@ -80,7 +80,6 @@ public class GameUI extends JFrame {
     }
 
     // -- METHODS
-
 
     // super simple.. main menu is a unique screen, so like we build it from scratch.
     // whereas the game screens
@@ -148,9 +147,14 @@ public class GameUI extends JFrame {
         Clickable tipsBtn = new Clickable("dialog", "tips", 0.275f, 0.37f, 0.08f, 0.03f);
         tipsBtn.setDialog(TIPS_DIALOG_TEXT); // just its a longer dialogue and putting it all here is whew! a lot!
 
+        Clickable cheerpjBtn = new Clickable("dialog", "cheerpj n ai", 0.275f, 0.47f, 0.08f, 0.03f);
+        cheerpjBtn.setDialog(CHEERPJ_DIALOG_TEXT); // just its a longer dialogue and putting it all here is whew! a lot!
+
+
         List<Clickable> clickables = new ArrayList<>();
         clickables.add(infoBtn);
         clickables.add(tipsBtn);
+        clickables.add(cheerpjBtn);
 
         Clickable[] clickableArray = clickables.toArray(new Clickable[0]);
         setGameScreen(background, clickableArray);
@@ -265,10 +269,20 @@ public class GameUI extends JFrame {
             case "fullscreen":
                 toggleFullscreen();
                 break;
+            case "end_run":
+                showGoodbyeScreen();
+                gameState.specialMusicPlayer.setLoop(false);
+                break;
             case "exit":
                 System.out.println("Appreciate your time!!!!!" +
                         "\n - @mike-pwns on Github");
-                System.exit(0);
+
+                gameState.musicPlayer.stopAudio();
+                gameState.specialMusicPlayer.stopAudio();
+                gameState.soundEffectPlayer.stopAudio();
+
+                showGoodbyeScreen();
+                break;
 
                 // others
             case "turn":
@@ -317,59 +331,19 @@ public class GameUI extends JFrame {
         container.repaint();
     }
 
+    private static native void requestBrowserFullscreen();
+
     // super simple fullscreen thing
     private void toggleFullscreen() {
-        GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(); // pull the screen itself (with its info and all)
-
-        // setting fullscreen
-        if (!fullscreen) {
-
-            // set the prev bounds (cuz were nice programmers and want going out of fullscreen to result in the same bounds)
-            previousWindowBounds = getBounds();
-
-            dispose(); // this gets rid of the screen itself, not all the data
-            setUndecorated(true); // this just removes the top bar with all the -[]x thing
-            setVisible(true); // idk why we needed this, but thank you claude for the debug tip :/
-            device.setFullScreenWindow(this); // then it redraws it in fullscreen
-
-        }
-
-        // going out of fullscreen
-        else {
-
-            // release screen/monitor from fullscreen
-            device.setFullScreenWindow(null);
-
-            // same jist, get rid of the actual rendered window
-            dispose();
-
-            // add the -[]x "decoration" (id call it a heading?)
-            setUndecorated(false);
-
-            // apply the bounds saved before
-            setBounds(previousWindowBounds);
-
-            // just set it visible (undoes dispose pretty much)
-            setVisible(true);
-
-
-        }
-
-        // change flag cuz duh doy
-        fullscreen = !fullscreen;
-
-        // same idea as before: just keep all the ops calm until we actually render ts
-        SwingUtilities.invokeLater(() -> {
-            getContentPane().revalidate();
-            getContentPane().repaint();
-            rescaleFonts(getContentPane());
-        });
+        requestBrowserFullscreen();
     }
-
     // takes a clickable, draws its dialogue right on top of it.
     // stays up until the player clicks it.
     // takes a clickable, draws its dialog right on top of it.
 // the box is only as wide as the text needs, up to a max width. stays up until clicked, or fades by length
+
+
+
     private void showDialog(Clickable clickable) {
 
         if (clickable.getSymbol().equals("!")) {
@@ -380,8 +354,15 @@ public class GameUI extends JFrame {
 
         // stage 1: remove the old dialog if there is one
         if (activeDialogPanel != null) {
+            if (dialogTimer != null) {
+                dialogTimer.stop();
+                dialogTimer = null;
+            }
+
             panes.remove(activeDialogPanel);
             activeDialogPanel = null;
+            panes.repaint();
+            return;
         }
 
         if (clickable.getDialog() == null || clickable.getDialog().isBlank()) {
@@ -395,7 +376,7 @@ public class GameUI extends JFrame {
         int screenHeight = panes.getHeight();
 
         float ratio = clickable.getFontRatio();
-        Font dialogFont = pixeltaFont.deriveFont(Math.max(1f, ratio * screenHeight));
+        Font dialogFont = pixeltaFont.deriveFont(Math.max(0.5f, ratio * screenHeight));
 
         // measure the text with the dialog font, so the box can be sized to the words
         FontMetrics fm = getFontMetrics(dialogFont);
@@ -408,31 +389,38 @@ public class GameUI extends JFrame {
         }
 
         // short text gets a narrow box. long text is capped and wraps inside it
-// short text gets a narrow box. anything longer wraps at the max width
-        int textWidth = Math.min(Math.max(widestLine, 0), maxTextWidth) + 0;
+        int textWidth = Math.min(Math.max(widestLine, 1), maxTextWidth);
+
         JPanel dialogPanel = new JPanel(new BorderLayout(0, 0));
         dialogPanel.setBackground(Color.WHITE);
         dialogPanel.setBorder(null);
 
-        // escape the special characters, newlines become <br>
-        String escaped = clickable.getDialog()
-                .replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\n", "<br>");
+        // use JTextArea instead of JLabel's HTML renderer (CheerpJ font compatibility)
+        JTextArea dialogText = new JTextArea(clickable.getDialog());
 
-        JLabel dialogLabel = new JLabel("<html><div style='width:" + textWidth
-                + "px; text-align: center;'>" + escaped + "</div></html>");
+        dialogText.setFont(dialogFont);
+        dialogText.setForeground(Color.BLACK);
+        dialogText.setBackground(Color.WHITE);
 
-        dialogLabel.setForeground(Color.BLACK);
-        dialogLabel.setFont(dialogFont);
-        dialogLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        dialogLabel.setVerticalAlignment(SwingConstants.CENTER);
+        dialogText.setEditable(false);
+        dialogText.setFocusable(false);
+        dialogText.setLineWrap(true);
+        dialogText.setWrapStyleWord(true);
 
-        // rescaleFonts() picks this up on resize
-        dialogLabel.putClientProperty("fontRatio", ratio);
+        dialogText.setOpaque(true);
+        dialogText.setBorder(null);
 
-        dialogPanel.add(dialogLabel, BorderLayout.CENTER);
+        // center the text horizontally
+        dialogText.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        dialogText.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // calculate the text height using the available width
+        dialogText.setSize(textWidth, Short.MAX_VALUE);
+
+        Dimension textSize = dialogText.getPreferredSize();
+        dialogText.setPreferredSize(new Dimension(textWidth, textSize.height));
+
+        dialogPanel.add(dialogText, BorderLayout.CENTER);
 
         // stage 3: size and position
 
@@ -447,37 +435,51 @@ public class GameUI extends JFrame {
         int clickableHeight = (int) (Math.hypot(screenWidth, screenHeight) * clickable.getH());
         int panelWidth = Math.min(size.width, screenWidth);
         int panelHeight = Math.max(size.height, clickableHeight);
-        int panelX = Math.clamp(x + w / 2 - panelWidth / 2, 0, screenWidth - panelWidth);
-        int panelY = Math.clamp(y, 0, screenHeight - panelHeight);
+
+        int panelX = Math.max(0, Math.min(
+                x + w / 2 - panelWidth / 2,
+                screenWidth - panelWidth
+        ));
+
+        int panelY = Math.max(0, Math.min(
+                y,
+                screenHeight - panelHeight
+        ));
+
         dialogPanel.setBounds(panelX, panelY, panelWidth, panelHeight);
         dialogPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         // stage 4: dismiss by clicking, or by the timer
-        dialogPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (dialogTimer != null) {
-                    dialogTimer.stop();
-                    dialogTimer = null;
-                }
-                panes.remove(dialogPanel);
-                activeDialogPanel = null;
-                panes.repaint();
-            }
-        });
+        java.awt.event.MouseAdapter dismissListener =
+                new java.awt.event.MouseAdapter() {
+                    @Override
+                    public void mouseClicked(java.awt.event.MouseEvent e) {
+                        if (dialogTimer != null) {
+                            dialogTimer.stop();
+                            dialogTimer = null;
+                        }
+
+                        panes.remove(dialogPanel);
+                        activeDialogPanel = null;
+                        panes.repaint();
+                    }
+                };
+
+        dialogPanel.addMouseListener(dismissListener);
+        dialogText.addMouseListener(dismissListener);
 
         // stays up for the long texts, otherwise fades based on length
         int length = clickable.getDialog().length();
         int duration;
 
-        if (clickable.getDialog().equals(INFO_DIALOG_TEXT) || clickable.getDialog().equals(TIPS_DIALOG_TEXT)) {
+        if (clickable.getDialog().equals(INFO_DIALOG_TEXT) || clickable.getDialog().equals(TIPS_DIALOG_TEXT) || clickable.getDialog().equals(CHEERPJ_DIALOG_TEXT)) {
             duration = Integer.MAX_VALUE;
         } else if (length <= 20) {
             duration = 1500;
         } else if (length <= 50) {
             duration = 2500;
         } else {
-            duration = 4000;
+            duration = 10000;
         }
 
         dialogTimer = new javax.swing.Timer(duration, e -> {
@@ -497,21 +499,36 @@ public class GameUI extends JFrame {
     }
 
 
+
+
     // font loader func - just reads the ttf file and sets the custom font to the var
     private static Font loadPixelFont() {
-        try {
-            // read the .ttf
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new File(PIXELTA_FONT_FILEPATH));
+        try (java.io.InputStream stream =
+                     GameUI.class.getResourceAsStream(
+                             "/" + PIXELTA_FONT_FILEPATH)) {
 
-            // register the font with the graphix system, just meeans its chill to be used like any normal font.
-            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
+            if (stream == null) {
+                throw new java.io.IOException(
+                        "Pixelta font not found in JAR"
+                );
+            }
 
-            // return it to be saved in the static var for everyone to use
+            Font font = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    stream
+            );
+
+            GraphicsEnvironment.getLocalGraphicsEnvironment()
+                    .registerFont(font);
+
             return font;
+
         } catch (Exception e) {
-            return new Font("Arial", Font.BOLD, 12); // in case sum breaks we return this
+            e.printStackTrace();
+            return new Font("Arial", Font.BOLD, 12);
         }
     }
+
 
     // changes the text of the mute button without rebuilding the screen
     public void refreshMuteButton(boolean muted) {
@@ -534,23 +551,88 @@ public class GameUI extends JFrame {
 
     // -- BACKGROUND PANEL
 
+
     static class BackgroundPanel extends JPanel {
         private final Image background;
 
         public BackgroundPanel(String imagePath) {
-            background = new ImageIcon(imagePath).getImage();
+            background = loadImage(imagePath);
         }
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
-            g.drawImage(
-                    background,
-                    0, 0,
-                    getWidth(), getHeight(),
-                    this
-            );
+            if (background != null) {
+                g.drawImage(
+                        background,
+                        0, 0,
+                        getWidth(), getHeight(),
+                        this
+                );
+            }
         }
     }
+    public void showGoodbyeScreen() {
+
+        JPanel goodbyePanel = new JPanel();
+        goodbyePanel.setBackground(Color.BLACK);
+        goodbyePanel.setLayout(
+                new BoxLayout(goodbyePanel, BoxLayout.Y_AXIS)
+        );
+
+        // Text
+        JLabel goodbyeLabel = new JLabel("THANKS FOR PLAYING!");
+        goodbyeLabel.setForeground(Color.WHITE);
+        goodbyeLabel.setFont(pixeltaFont.deriveFont(40f));
+        goodbyeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Load image
+        Image goodbyeImage = loadImage("res/images/goodbye.jpg");
+
+        // Scale image to fit a 3:4 rectangle
+        int imageWidth = 450;
+        int imageHeight = 600;
+
+        Image scaledImage = goodbyeImage.getScaledInstance(
+                imageWidth,
+                imageHeight,
+                Image.SCALE_SMOOTH
+        );
+
+        JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
+        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Layout
+        goodbyePanel.add(Box.createVerticalGlue());
+        goodbyePanel.add(goodbyeLabel);
+        goodbyePanel.add(Box.createVerticalStrut(25));
+        goodbyePanel.add(imageLabel);
+        goodbyePanel.add(Box.createVerticalGlue());
+
+        setContentPane(goodbyePanel);
+
+        goodbyePanel.revalidate();
+        goodbyePanel.repaint();
+    }
+    private static Image loadImage(String path) {
+        try {
+            String resourcePath = "/" + path.replace("\\", "/");
+
+            java.net.URL resource =
+                    GameUI.class.getResource(resourcePath);
+
+            if (resource == null) {
+                System.err.println("Image not found: " + resourcePath);
+                return null;
+            }
+
+            return new ImageIcon(resource).getImage();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

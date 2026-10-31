@@ -1,0 +1,170 @@
+{
+  "locationIndex": 12,
+  "angles": [
+    {
+      "angleIndex": 0,
+      "clickables": [
+        {
+          "clickableType": "go",
+          "symbol": "V",
+          "x": 0.35,
+          "y": 0.95,
+          "w": 0.02,
+          "h": 0.02,
+          "targetLocation": 11
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "<",
+          "x": 0.03,
+          "y": 0.5,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 2
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "*",
+          "x": 0.75,
+          "y": 0.76,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 1
+        }
+      ]
+    },
+    {
+      "angleIndex": 1,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "V",
+          "x": 0.15,
+          "y": 0.95,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 0
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "click here for free robux",
+          "x": 0.65,
+          "y": 0.7,
+          "w": 0.15,
+          "h": 0.02,
+          "dialog": "sike brah thats not in the budget"
+        }
+      ]
+    },
+    {
+      "angleIndex": 2,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "V",
+          "x": 0.5,
+          "y": 0.95,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 0
+        },
+        {
+          "clickableType": "turn",
+          "symbol": ">",
+          "x": 0.95,
+          "y": 0.5,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 3
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "A",
+          "x": 0.73,
+          "y": 0.26,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 4
+        }
+      ]
+    },
+    {
+      "angleIndex": 3,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "<",
+          "x": 0.03,
+          "y": 0.4,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 2
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.65,
+          "y": 0.7,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "so quiet"
+        }
+      ]
+    },
+    {
+      "angleIndex": 4,
+      "clickables": [
+        {
+          "clickableType": "turn",
+          "symbol": "V",
+          "x": 0.5,
+          "y": 0.95,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 2
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "A",
+          "x": 0.7,
+          "y": 0.5,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 5
+        },
+        {
+          "clickableType": "dialog",
+          "symbol": "*",
+          "x": 0.45,
+          "y": 0.35,
+          "w": 0.02,
+          "h": 0.02,
+          "dialog": "what happened here?"
+        }
+      ]
+    },
+    {
+      "angleIndex": 5,
+      "clickables": [
+        {
+          "clickableType": "go",
+          "symbol": "<",
+          "x": 0.22,
+          "y": 0.57,
+          "w": 0.02,
+          "h": 0.02,
+          "targetLocation": 13
+        },
+        {
+          "clickableType": "turn",
+          "symbol": "V",
+          "x": 0.4,
+          "y": 0.95,
+          "w": 0.02,
+          "h": 0.02,
+          "targetAngle": 4
+        }
+      ]
+    }
+  ]
+}

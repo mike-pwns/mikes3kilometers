@@ -43,7 +43,7 @@
           "y": 0.4,
           "w": 0.02,
           "h": 0.02,
-          "dialog": "going around this whole friggin lake again\nwait is this a pond or a lake?"
+          "dialog": "going around this whole friggin lake again. wait is this a pond or a lake?"
         },
         {
           "clickableType": "turn",

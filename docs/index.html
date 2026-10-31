@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>mikes 3 kilometers</title>
+
+    <link rel="icon" href="icon.png">
+
+    <script src="https://cjrtnc.leaningtech.com/4.3/loader.js"></script>
+
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: black;
+            overflow: hidden;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="container"></div>
+
+<script type="module">
+
+// =====================================================
+// AUDIO MANAGER
+// =====================================================
+
+const AudioManager = {
+
+    players: new Map(),
+
+    muted: true,
+
+    unlocked: false,
+
+    getPath(path) {
+
+        path = String(path);
+
+        path = path.replace(/^\/res\//, "res/");
+        path = path.replace(/^\/+/, "");
+
+        if (!path.startsWith("res/")) {
+            path = "res/audio/" + path;
+        }
+
+        return path;
+    },
+
+    play(id, path, loop, individuallyMuted) {
+
+        this.stop(id);
+
+        const src = this.getPath(path);
+
+        const audio = new Audio(src);
+
+        audio.loop = Boolean(loop);
+        audio.preload = "auto";
+        audio.volume = 1.0;
+        audio.muted = this.muted;
+
+        const player = {
+            audio: audio,
+            individuallyMuted: Boolean(individuallyMuted),
+            id: id
+        };
+
+        this.players.set(id, player);
+
+        this.attemptPlayback(player);
+    },
+
+    attemptPlayback(player) {
+
+        const audio = player.audio;
+
+        audio.muted = this.muted;
+
+        audio.play().catch(error => {
+
+            if (error.name === "NotAllowedError") {
+
+                // Playback will be retried after user interaction.
+
+            } else if (error.name !== "AbortError") {
+
+                console.error("[Audio] Playback failed:", error);
+            }
+        });
+    },
+
+    stop(id) {
+
+        const player = this.players.get(id);
+
+        if (!player) {
+            return;
+        }
+
+        player.audio.pause();
+        player.audio.currentTime = 0;
+
+        this.players.delete(id);
+    },
+
+    pause(id) {
+
+        const player = this.players.get(id);
+
+        if (!player) {
+            return;
+        }
+
+        player.audio.pause();
+    },
+
+    resume(id) {
+
+        const player = this.players.get(id);
+
+        if (!player) {
+            return;
+        }
+
+        this.attemptPlayback(player);
+    },
+
+    setMuted(muted) {
+
+        this.muted = Boolean(muted);
+
+        for (const player of this.players.values()) {
+
+            player.audio.muted = this.muted;
+
+            if (!this.muted && player.audio.paused) {
+                this.attemptPlayback(player);
+            }
+        }
+    },
+
+    unlock() {
+
+        if (this.unlocked) {
+            return;
+        }
+
+        this.unlocked = true;
+    }
+};
+
+
+// =====================================================
+// USER INTERACTION
+// =====================================================
+
+document.addEventListener("pointerdown", () => {
+
+    AudioManager.unlock();
+
+}, {
+    once: true,
+    capture: true
+});
+
+document.addEventListener("keydown", () => {
+
+    AudioManager.unlock();
+
+}, {
+    once: true,
+    capture: true
+});
+
+
+// =====================================================
+// CHEERPJ INITIALIZATION
+// =====================================================
+
+await cheerpjInit({
+
+    version: 17,
+
+    natives: {
+
+        Java_GameUI_requestBrowserFullscreen:
+            async function () {
+
+                try {
+
+                    if (!document.fullscreenElement) {
+
+                        await document.documentElement.requestFullscreen();
+
+                    } else {
+
+                        await document.exitFullscreen();
+                    }
+
+                } catch (error) {
+
+                    console.error("[Fullscreen] Error:", error);
+                }
+            },
+
+        Java_AudioPlayer_playBrowserAudio:
+            function (lib, self, id, path, loop, muted) {
+
+                AudioManager.play(
+                    id,
+                    path,
+                    loop,
+                    muted
+                );
+            },
+
+        Java_AudioPlayer_stopBrowserAudio:
+            function (lib, self, id) {
+
+                AudioManager.stop(id);
+            },
+
+        Java_AudioPlayer_pauseBrowserAudio:
+            function (lib, self, id) {
+
+                AudioManager.pause(id);
+            },
+
+        Java_AudioPlayer_resumeBrowserAudio:
+            function (lib, self, id) {
+
+                AudioManager.resume(id);
+            },
+
+        Java_AudioPlayer_setBrowserMuted:
+            function (lib, self, muted) {
+
+                AudioManager.setMuted(muted);
+            }
+    }
+
+});
+
+
+// =====================================================
+// CREATE GAME DISPLAY
+// =====================================================
+
+const container = document.getElementById("container");
+
+cheerpjCreateDisplay(
+    -1,
+    -1,
+    container
+);
+
+
+// =====================================================
+// WINDOW RESIZING
+// =====================================================
+
+const resizeObserver = new ResizeObserver(() => {
+
+    window.dispatchEvent(new Event("resize"));
+
+});
+
+resizeObserver.observe(container);
+
+
+// =====================================================
+// START GAME
+// =====================================================
+
+await cheerpjRunMain(
+    "Main",
+    "/app/mikes3kilometers.jar:/app/gson-2.15.0.jar"
+);
+
+</script>
+
+</body>
+</html>
